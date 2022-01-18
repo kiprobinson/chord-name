@@ -1,20 +1,46 @@
 import { ChordNameOptions, sanitizeChordNameOptions, SanitizedChordNameOptions } from "./chord-name-options";
 import Note from "./note";
 
+export type IntervalName = 'R' | 'b2' | '\u266D2' | '2' | 'm3' | '3' | '4' | 'b5' | '\u266D5' | '5' | '#5' | '\u266F5' | '6' | 'bb7' | '\u266D\u266D7' | 'dom7' | '7' | 'maj7' | 'M7' | '9' | '#9' | '\u266F9' | '11' | '13';
+
+export type Interval = {
+  interval: IntervalName;
+  note: Note;
+}
+
+export type ChordNameInfo = {
+  name: string;
+  score: number;
+  notes: Interval[];
+  verbose: string[];
+}
+
 export default class Chord {
   private readonly notes: Note[];
   
-  constructor (notes: Note[]) {
+  /**
+   * @param notes Can be an array of Note objects, or a string of note names separated by space or comma.
+   */
+  constructor (notes: Note[]|string) {
     this.notes = [];
-    for(const note of notes) {
-      if(!(note instanceof Note))
-        throw new Error(`Invalid note: ${note}`);
-    };
+    if('string' === typeof notes) {
+      notes = notes.split(/[\s,]+/g).filter(s => s !== '').map(s => new Note(s));
+    }
+    else {
+      for(const note of notes) {
+        if(!(note instanceof Note))
+          throw new Error(`Invalid note: ${note}`);
+      }
+    }
+    
     this.notes = [ ...notes ];
     if(this.notes.length === 0)
       throw new Error("Chord cannot be empty");
   }
   
+  /**
+   * Returns the notes of this chord, separated by a string.
+   */
   toString() {
     return this.notes.map(n => n.toString()).join(' ');
   };
@@ -40,44 +66,47 @@ export default class Chord {
   
   /** 
    * THIS IS WHERE THE MAGIC HAPPENS.
-   *  returns struct like:
-   *  {
-   *    name: 'C',
-   *    notes: [
-   *      {interval: 'R', note: C},
-   *      {interval: '3', note: E},
-   *      {interval: '5', note: G}
-   *    ]
-   *    verbose: [ 'assuming root is C', 'found a maj3 - this is a major chord', 'found 5th' ]
-   *  }
-   *  
-   *  another example:
-   *  {
-   *    name: 'Cm7',
-   *    notes: [
-   *      {interval: 'R', note: C},
-   *      {interval: 'm3', note: Eb},
-   *      {interval: '5', note: G}
-   *      {interval: 'm7', note: Bb}
-   *    ]
-   *    verbose: [ 'assuming root is C', 'found a min3 - this is a minor chord', 'found 5th', 'found minor 7th' ]
-   *  }
-   *  
-   *  See standardizeOptions() for details on values for options parameter.
+   * 
+   * Returns object like:
+   * ```
+   *   {
+   *     name: 'C',
+   *     notes: [
+   *       {interval: 'R', note: C},
+   *       {interval: '3', note: E},
+   *       {interval: '5', note: G}
+   *     ]
+   *     verbose: [ 'assuming root is C', 'found a maj3 - this is a major chord', 'found 5th' ]
+   *   }
+   * ```
+   * 
+   * another example:
+   * ``` 
+   *   {
+   *     name: 'Cm7',
+   *     notes: [
+   *       {interval: 'R', note: C},
+   *       {interval: 'm3', note: Eb},
+   *       {interval: '5', note: G}
+   *       {interval: 'm7', note: Bb}
+   *     ]
+   *     verbose: [ 'assuming root is C', 'found a min3 - this is a minor chord', 'found 5th', 'found minor 7th' ]
+   *   }
+   * ```
    */
-  getName(rootNote: Note, _options?:ChordNameOptions, bassNote?: Note) {
+  getName(rootNote: Note, _options?:ChordNameOptions, bassNote?: Note):ChordNameInfo {
     const options: SanitizedChordNameOptions = sanitizeChordNameOptions(_options);
     
-    let rootName = rootNote.getName(options);
-    let quality = '';
+    let rootName:string = rootNote.getName(options);
+    let quality  = '';
     let intervalName = '';
     let altFifth = '';
     let added = '';
     let omissions = '';
     let bass = '';
     
-    let verbose = [];
-    let noteDetails = [];
+    let verbose: string[] = [];
+    let noteDetails: Interval[] = [];
     let score = 0;
     
     let lowerCaseRoot = false; //will be true if this is a minor chord and omitMinor is true
@@ -86,7 +115,7 @@ export default class Chord {
     bassNote = bassNote || rootNote;
     
     //determine which intervals are present
-    let intervals = new Array(12).fill(false);
+    let intervals: boolean[] = new Array(12).fill(false);
     this.notes.forEach(note => intervals[rootNote.interval(note)] = true);
     
     //keep track of which notes have been "consumed"
@@ -116,7 +145,7 @@ export default class Chord {
     const BASS = rootNote.interval(bassNote);
     
     //names for intervals (although some could have different names, like 2 could also be 9 in some contexts)
-    const INTERVAL_NAMES = [ 'R', `${options.flatSymbol}2`, '2', 'm3', '3', '4', `${options.flatSymbol}5`, '5', `${options.sharpSymbol}5`, '6', 'dom7', 'maj7' ];
+    const INTERVAL_NAMES:IntervalName[] = [ 'R', `${options.flatSymbol}2`, '2', 'm3', '3', '4', `${options.flatSymbol}5`, '5', `${options.sharpSymbol}5`, '6', 'dom7', 'maj7' ];
     
     if(!intervals[ROOT]) {
       score -= 20;
@@ -139,7 +168,7 @@ export default class Chord {
       bass = `/${bassNote.getName(options)}`;
     }
     
-    let noteCount = intervals.reduce((acc,val) => acc + (val ? 1 : 0));
+    let noteCount:number = intervals.reduce((acc:number, val:boolean) => acc + (val ? 1 : 0), 0);
     
     if(noteCount == 1) {
       verbose.push('+0  one-note "chord". name is just the root');
@@ -424,7 +453,7 @@ export default class Chord {
       else if(isDim && intervals[DOUBLE_FLAT_SEVENTH]) {
         score -= 5;
         verbose.push(`-5  diminished chord with double-flat seventh - ${options.dimSymbol}7 chord`);
-        noteDetails.push({interval: `${options.flatSymbol}${options.flatSymbol}7`, note: rootNote.transpose(SIXTH)});
+        noteDetails.push({interval: <IntervalName>`${options.flatSymbol}${options.flatSymbol}7`, note: rootNote.transpose(SIXTH)});
         consumed[SIXTH] = true;
         intervalName = '7';
       }
@@ -656,9 +685,11 @@ export default class Chord {
         score -= 10;
         verbose.push(`-10 found ${intervalName} we have not used`);
         noteDetails.push({interval: intervalName, note: rootNote.transpose(i)});
-        if(intervalName.match(/^[a-z]/))
-          intervalName = `(${intervalName})`;
-        added += `add${intervalName}`;
+        
+        let wrappedIntervalName:string = intervalName;
+        if(wrappedIntervalName.match(/^[a-z]/))
+          wrappedIntervalName = `(${wrappedIntervalName})`;
+        added += `add${wrappedIntervalName}`;
       }
     }
     
@@ -688,6 +719,4 @@ export default class Chord {
       verbose: verbose
     };
   }
-  
-  
 }

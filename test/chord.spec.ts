@@ -5,7 +5,7 @@ import { ChordNameOptions } from "../src/chord-name-options";
 
 //shortcuts to make tests less tedious to write...
 const c = new Note('C');
-const crd = (noteList:string) => new Chord(noteList.split(' ').map(s => new Note(s)));
+const crd = (noteList:string) => new Chord(noteList);
 
 describe('test Chord class', () => {
   it('get chord name - single note "chord"', () => {
@@ -338,7 +338,7 @@ describe('test Chord class', () => {
         const expected = test.x;
         const options = test.o;
         const optionsJson = JSON.stringify(options);
-        const chord = new Chord(chordNotes.split(' ').map(s => new Note(s)));
+        const chord = new Chord(chordNotes);
         expect(chord.getName(root, options).name, `Chord("${chordNotes}").getName(root=F#, options=${optionsJson})`).to.equal(expected);
       }
     }
