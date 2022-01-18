@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import Note from "../src/Note";
+import Note from "../src/note";
 
 
 describe('test Note class', () => {
@@ -112,23 +112,23 @@ describe('test Note class', () => {
   });
   
   it('negative tests for creating notes', () => {
-    expect(()=>new Note('')).to.throw('Invalid note: ');
-    expect(()=>new Note('H')).to.throw('Invalid note: H');
-    expect(()=>new Note(0.5)).to.throw('Invalid note: 0.5');
+    expect(()=>new Note('')).to.throw();
+    expect(()=>new Note('H')).to.throw();
+    expect(()=>new Note(0.5)).to.throw();
     
     //these are technically valid but I haven't implemented... maybe someday...
-    expect(()=>new Note('Cb')).to.throw('Invalid note: Cb');
-    expect(()=>new Note('Bbb')).to.throw('Invalid note: Bbb');
-    expect(()=>new Note('B#')).to.throw('Invalid note: B#');
-    expect(()=>new Note('A##')).to.throw('Invalid note: A##');
+    expect(()=>new Note('Cb')).to.throw();
+    expect(()=>new Note('Bbb')).to.throw();
+    expect(()=>new Note('B#')).to.throw();
+    expect(()=>new Note('A##')).to.throw();
     
     //these are things that typescript won't allow, but a JS caller may do...
-    // @ts-ignore
-    expect(()=>new Note(null)).to.throw('Invalid note: null');
-    // @ts-ignore
-    expect(()=>new Note(undefined)).to.throw('Invalid note: undefined');
-    // @ts-ignore
-    expect(()=>new Note()).to.throw('Invalid note: undefined');
+    // @ts-expect-error
+    expect(()=>new Note(null)).to.throw();
+    // @ts-expect-error
+    expect(()=>new Note(undefined)).to.throw();
+    // @ts-expect-error
+    expect(()=>new Note()).to.throw();
   });
   
   it('create note by id', () => {
@@ -160,31 +160,28 @@ describe('test Note class', () => {
     expect(new Note(-25).getName()).to.equal('B');
   });
   
-  //TODO: is this functionality that I actually need??
-  /*
   it('get note id', () => {
-    expect(new Note(0).id).to.equal(0);
-    expect(new Note(1).id).to.equal(1);
-    expect(new Note(11).id).to.equal(11);
+    expect(new Note(0).getId()).to.equal(0);
+    expect(new Note(1).getId()).to.equal(1);
+    expect(new Note(11).getId()).to.equal(11);
     
     //starts repeating above 11
-    expect(new Note(12).id).to.equal(0);
-    expect(new Note(13).id).to.equal(1);
-    expect(new Note(23).id).to.equal(11);
-    expect(new Note(24).id).to.equal(0);
-    expect(new Note(67).id).to.equal(7);
+    expect(new Note(12).getId()).to.equal(0);
+    expect(new Note(13).getId()).to.equal(1);
+    expect(new Note(23).getId()).to.equal(11);
+    expect(new Note(24).getId()).to.equal(0);
+    expect(new Note(67).getId()).to.equal(7);
     
     //repeats in negatives too
-    expect(new Note(-1).id).to.equal(11);
-    expect(new Note(-2).id).to.equal(10);
-    expect(new Note(-11).id).to.equal(1);
-    expect(new Note(-12).id).to.equal(0);
-    expect(new Note(-13).id).to.equal(11);
-    expect(new Note(-23).id).to.equal(1);
-    expect(new Note(-25).id).to.equal(11);
-    expect(new Note(-63).id).to.equal(9);
+    expect(new Note(-1).getId()).to.equal(11);
+    expect(new Note(-2).getId()).to.equal(10);
+    expect(new Note(-11).getId()).to.equal(1);
+    expect(new Note(-12).getId()).to.equal(0);
+    expect(new Note(-13).getId()).to.equal(11);
+    expect(new Note(-23).getId()).to.equal(1);
+    expect(new Note(-25).getId()).to.equal(11);
+    expect(new Note(-63).getId()).to.equal(9);
   });
-  */
   
   it('transpose note', () => {
     expect(new Note('C').transpose(4).getName()).to.equal('E');

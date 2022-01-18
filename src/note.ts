@@ -72,6 +72,14 @@ export default class Note {
   };
   
   /**
+   * Returns the internal ID of this note: an integer from 0-11, indicating how many half
+   * steps above C this note is.
+   */
+  getId(): number {
+    return this.id;
+  }
+  
+  /**
    * Transposes this note by the given number of half-steps.
    * @param n Number of half-steps (may be positive or negative, but must be an integer).
    * @returns a new Note, transposed by the provided amount.
