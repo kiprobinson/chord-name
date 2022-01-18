@@ -37,7 +37,7 @@ export const sanitizeChordNameOptions = (options?: ChordNameOptions): SanitizedC
   const flatSymbol = unicodeAccidentals ? '\u266D' : 'b';
   const sharpSymbol = unicodeAccidentals ? '\u266F' : '#';
   const majorSymbol = (options.majorSymbol === 'maj' || options.majorSymbol === 'M') ? options.majorSymbol : 'maj';
-  const omitMajor = options.omitMajor === true;
+  const omitMajor = options.omitMajor !== false;
   const minorSymbol = (options.minorSymbol === 'min' || options.minorSymbol === 'm' || options.minorSymbol === '-') ? options.minorSymbol : 'm';
   const omitMinor = options.omitMinor === true;
   const augSymbol = (options.augSymbol === 'aug' || options.augSymbol === '+') ? options.augSymbol : 'aug';
