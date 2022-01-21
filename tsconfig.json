@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
+    "outDir": "built",
     "strict": true,
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es6",
     "moduleResolution": "node",
-    "sourceMap": true,
-    "noFallthroughCasesInSwitch": true,
-    "outDir": "dist"
+    "declaration": true,
+    "sourceMap": false,
+    "noFallthroughCasesInSwitch": true
   },
   "lib": ["es2015"]
 }

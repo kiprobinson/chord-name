@@ -4,7 +4,8 @@
   "description": "A library to generate the potential chord names, given a set of notes.",
   "main": "index.ts",
   "scripts": {
-    "build": "tsc",
+    "clean": "rimraf built dist",
+    "build": "pnpm clean && tsc",
     "test": "mocha -r ts-node/register ./test/**/*.spec.ts"
   },
   "repository": {
@@ -28,6 +29,7 @@
     "chai": "^4.3.4",
     "eslint": "^8.7.0",
     "mocha": "^9.1.4",
+    "rimraf": "^3.0.2",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.4"
   }
