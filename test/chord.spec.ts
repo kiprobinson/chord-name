@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import Note from "../src/note";
+import Pitch from "../src/pitch";
 import Chord from "../src/chord";
 import { ChordNameOptions } from "../src/chord-name-options";
 
@@ -8,6 +9,54 @@ const c = new Note('C');
 const crd = (noteList:string) => new Chord(noteList);
 
 describe('test Chord class', () => {
+  it('chord constructor - string', () => {
+    const chord = new Chord('   C    EB,G,    b,c,');
+    expect(chord.getName(c).name).to.equal('Cm(maj7)');
+    expect(chord.getBassNote()).to.be.null;
+    expect(chord.getNotes().map(note => note.toString()).join(' ')).to.equal('C D# G B');
+  });
+  
+  it('chord constructor - string array', () => {
+    const chord = new Chord(['C', 'EB', 'G', 'b', 'c']);
+    expect(chord.getName(c).name).to.equal('Cm(maj7)');
+    expect(chord.getBassNote()).to.be.null;
+    expect(chord.getNotes().map(note => note.toString()).join(' ')).to.equal('C D# G B');
+  });
+  
+  it('chord constructor - Note array', () => {
+    const chord = new Chord([new Note('C'), new Note('EB'), new Note('G'), new Note('b'), new Note('c')]);
+    expect(chord.getName(c).name).to.equal('Cm(maj7)');
+    expect(chord.getBassNote()).to.be.null;
+    expect(chord.getNotes().map(note => note.toString()).join(' ')).to.equal('C D# G B');
+  });
+  
+  it('chord constructor - Pitch array', () => {
+    const chord = new Chord([new Pitch('C5'), new Pitch('EB6'), new Pitch('G4'), new Pitch('b3'), new Pitch('c2')]);
+    expect(chord.getName(c).name).to.equal('Cm(maj7)');
+    expect(chord.getBassNote()?.getName()).to.equal('C');
+    expect(chord.getNotes().map(note => note.toString()).join(' ')).to.equal('C D# G B');
+  });
+  
+  it('chord constructor - mixed array', () => {
+    const chord = new Chord(['C', new Note('EB'), new Pitch('G5'), new Note('b'), 'c']);
+    expect(chord.getName(c).name).to.equal('Cm(maj7)');
+    expect(chord.getBassNote()).to.be.null;
+    expect(chord.getNotes().map(note => note.toString()).join(' ')).to.equal('C D# G B');
+  });
+  
+  it('chord constructor - negative tests', () => {
+    // @ts-expect-error
+    expect(() => new Chord()).to.throw;
+    // @ts-expect-error
+    expect(() => new Chord(null)).to.throw;
+    expect(() => new Chord('')).to.throw;
+    expect(() => new Chord([])).to.throw;
+    // @ts-expect-error
+    expect(() => new Chord([1])).to.throw;
+    // @ts-expect-error
+    expect(() => new Chord([new Date()])).to.throw;
+  });
+  
   it('get chord name - single note "chord"', () => {
     expect(crd('C').getName(c).name).to.equal('C');
   });

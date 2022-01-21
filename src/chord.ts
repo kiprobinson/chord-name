@@ -1,5 +1,6 @@
 import { ChordNameOptions, sanitizeChordNameOptions, SanitizedChordNameOptions } from "./chord-name-options";
 import Note from "./note";
+import Pitch from "./pitch";
 
 export type IntervalName = 'R' | 'b2' | '\u266D2' | '2' | 'm3' | '3' | '4' | 'b5' | '\u266D5' | '5' | '#5' | '\u266F5' | '6' | 'bb7' | '\u266D\u266D7' | 'dom7' | '7' | 'maj7' | 'M7' | '9' | '#9' | '\u266F9' | '11' | '13';
 
@@ -16,39 +17,70 @@ export type ChordNameInfo = {
 }
 
 export default class Chord {
-  private readonly notes: Note[];
+  private readonly notes: Note[] = [];
+  private readonly bassNote: Note|null = null;
   
   /**
-   * @param notes Can be an array of Note objects, or a string of note names separated by space or comma.
+   * @param arg1 Can be an array of Note objects, or a string of note names separated by space or comma.
    */
-  constructor (notes: Note[]|string) {
-    this.notes = [];
-    if('string' === typeof notes) {
-      notes = notes.split(/[\s,]+/g).filter(s => s !== '').map(s => new Note(s));
-    }
-    else {
-      for(const note of notes) {
-        if(!(note instanceof Note))
-          throw new Error(`Invalid note: ${note}`);
-      }
-    }
+  constructor (arg1: string|Array<string|Note|Pitch>) {
+    // convert plain string into string array
+    if('string' === typeof arg1)
+      arg1 = arg1.split(/[\s,]+/g).filter(s => s !== '').map(s => new Note(s));
     
-    this.notes = [ ...notes ];
-    if(this.notes.length === 0)
-      throw new Error("Chord cannot be empty");
+    // at this point it should be an array unless we got something weird like null
+    if(Array.isArray(arg1)) {
+      if(arg1.length === 0)
+        throw new Error("Chord cannot be empty");
+      
+      // if this array is all Pitch objects, then we can tell what the lowest pitch is
+      let isPitchArray = true;
+      let lowestPitch:Pitch|null = null;
+      
+      // keep track of what notes we've already encountered so that we don't have duplicates
+      const allNoteIds = new Set<number>();
+      
+      for(let argElement of arg1) {
+        if(isPitchArray && (argElement instanceof Pitch)) {
+          if(lowestPitch === null || argElement.compareTo(lowestPitch) < 0)
+            lowestPitch = argElement;
+        }
+        else {
+          isPitchArray = false;
+          lowestPitch = null;
+        }
+        
+        let note:Note;
+        if('string' === typeof argElement || argElement instanceof Note)
+          note = new Note(argElement);
+        else if (argElement instanceof Pitch)
+          note = argElement.getNote();
+        else
+          throw new Error(`Invalid value in Chord constructor: ${argElement}`);
+        
+        // if this note is already in the chord, don't add it again
+        if(!allNoteIds.has(note.getId())) {
+          this.notes.push(note);
+          allNoteIds.add(note.getId());
+        }
+      }
+      
+      if(lowestPitch)
+        this.bassNote = lowestPitch?.getNote();
+    }
   }
   
   /**
    * Returns the notes of this chord, separated by a string.
    */
-  toString() {
+  toString(): string {
     return this.notes.map(n => n.toString()).join(' ');
   };
   
   /**
    * Returns all possible names of this chord, by returning determining the name of the chord with each note as root note.
    */
-  getNames(options?:ChordNameOptions, rootNote?:Note, bassNote?:Note) {
+  getNames(options?:ChordNameOptions, rootNote?:Note, bassNote?:Note): ChordNameInfo[] {
     if(rootNote)
       return [this.getName(rootNote, options, bassNote)];
     
@@ -60,8 +92,23 @@ export default class Chord {
   /**
    * Returns whether this chord contains the given note.
    */
-  hasNote(note: Note) {
+  hasNote(note: Note): boolean {
     return (this.notes.findIndex(n => n.equals(note)) >= 0);
+  }
+  
+  /**
+   * Returns an array of the notes in this chord.
+   */
+  getNotes(): Note[] {
+    return this.notes.map(note => new Note(note));
+  }
+  
+  /**
+   * Returns the bass note, if one is known. There is only a bass note if an array of
+   * pitches was passed to the constructor, otherwise null will be returned.
+   */
+  getBassNote(): Note|null {
+    return this.bassNote;
   }
   
   /** 
@@ -112,7 +159,7 @@ export default class Chord {
     let lowerCaseRoot = false; //will be true if this is a minor chord and omitMinor is true
     
     //if no bass note specified, assume the root note is bass note
-    bassNote = bassNote || rootNote;
+    bassNote = bassNote || this.bassNote || rootNote;
     
     //determine which intervals are present
     let intervals: boolean[] = new Array(12).fill(false);

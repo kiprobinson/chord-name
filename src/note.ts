@@ -18,7 +18,7 @@ export default class Note {
    *             can't have more than one flat or sharp symbol, you cannot have a natural
    *             symbol, and you cannot have Cb, B#, Fb, or E#. (maybe some day...)
    */
-  constructor(note:string|number) {
+  constructor(note:string|number|Note) {
     // a copy of the input note, used for error messages
     const _note = note;
     
@@ -46,8 +46,12 @@ export default class Note {
         this.id += 12;
       return;
     }
+    else if (note instanceof Note) {
+      this.id = note.id;
+      return;
+    }
     
-    throw new Error(`Invalid note: ${_note}`);
+    throw new Error(`Invalid note: '${_note}'`);
   }
   
   /**
