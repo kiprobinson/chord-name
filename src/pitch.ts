@@ -11,15 +11,15 @@ export default class Pitch {
   
   constructor(note: Note, octave: number);
   constructor(note: string, octave?: number);
-  constructor(note: Note|string, octave?:number) {
+  constructor(note: Note|string, octave?: number) {
     let _note:Note|null = null;
     let _octave:number|null = null;
     
     if(('string' === typeof note)) {
       if('undefined' === typeof octave) {
         //just a string constructor
-        _octave = Number(note.substr(note.length - 1));
-        _note = new Note(note.substr(0, note.length - 1));
+        _octave = Number(note.substring(note.length - 1));
+        _note = new Note(note.substring(0, note.length - 1));
       }
       else {
         _note = new Note(note);
