@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rimraf built dist",
     "build": "pnpm clean && tsc",
-    "test": "mocha -r ts-node/register ./test/**/*.spec.ts"
+    "test": "mocha -r ts-node/register ./test/**/*.test.ts"
   },
   "repository": {
     "type": "git",
