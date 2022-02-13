@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import Note from "../src/note";
+import {Note} from "../src";
 
 
 describe('test Note class', () => {

@@ -1,8 +1,5 @@
 import { expect } from "chai";
-import Note from "../src/note";
-import Pitch from "../src/pitch";
-import Chord from "../src/chord";
-import { ChordNameOptions } from "../src/chord-name-options";
+import {Note, Pitch, Chord, ChordNameOptions} from "../src";
 
 //shortcuts to make tests less tedious to write...
 const c = new Note('C');
@@ -59,6 +56,7 @@ describe('test Chord class', () => {
   
   it('get chord name - single note "chord"', () => {
     expect(crd('C').getName(c).name).to.equal('C');
+    expect(crd('C').getName('C').name).to.equal('C');
   });
   
   it('get chord name - two-note "chords"', () => {

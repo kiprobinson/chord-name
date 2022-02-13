@@ -98,15 +98,18 @@ export default class Note {
    * Returns if this is equal to that. Allows equality comparison for two different
    * instances of Note.
    */
-  equals(that: any) {
-    return (that instanceof Note && this.id == that.id);
+  equals(that: any): boolean {
+    return (that instanceof Note && this.id === that.id);
   }
   
   /**
    * Returns the interval from this note to that note, as an integer from 0-11. Assumes this note is the root.
    * Another way of saying it: this is the number of half steps to get from this note to the next-highest that-note.
    */
-  interval(that: Note) {
+  interval(that: Note|string): number {
+    if(!(that instanceof Note))
+      return this.interval(new Note(that));
+    
     return that.id - this.id + (this.id > that.id ? 12 : 0);
   }
 }

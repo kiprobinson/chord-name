@@ -2,14 +2,23 @@ import { ChordNameOptions } from "./chord-name-options";
 import Note from "./note";
 
 /**
- * A Pitch is a combination of a Note and an octave, i.e. "C2", "Eb4", "F#0"
+ * A Pitch is a combination of a Note and an octave, i.e. "C2", "Eb4", "F#0".
+ * Valid pitches are in the range C0 - B8.
  */
 export default class Pitch {
   private readonly note: Note;
   private readonly octave: number;
   
-  
+  /**
+   * @param note Either a note instance, or a string that can be converted to one.
+   * @param octave Must be an integer in the range 0-8.
+   */
   constructor(note: Note, octave: number);
+  /**
+   * @param note If octave is provided, this should be a string that can be passed to the Note constructor.
+   *             If octave is not provided, this should be a string representation of the pitch such as "C1".
+   * @param octave An integer in the range 0-8.
+   */
   constructor(note: string, octave?: number);
   constructor(note: Note|string, octave?: number) {
     let _note:Note|null = null;

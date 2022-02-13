@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import Note from "../src/note";
-import Pitch from "../src/pitch";
+import {Note} from "../src";
+import {Pitch} from "../src";
 
 
 describe('test Pitch class', () => {
@@ -32,6 +32,7 @@ describe('test Pitch class', () => {
     // @ts-expect-error
     expect(()=>new Pitch(new Note('C'), null)).to.throw();
     expect(()=>new Pitch(new Note('C'), 2.5)).to.throw();
+    expect(()=>new Pitch('C2', 2)).to.throw();
   });
   
   it('get pitch name as flats', () => {

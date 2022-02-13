@@ -5,73 +5,107 @@ import Pitch from "./pitch";
 export type IntervalName = 'R' | 'b2' | '\u266D2' | '2' | 'm3' | '3' | '4' | 'b5' | '\u266D5' | '5' | '#5' | '\u266F5' | '6' | 'bb7' | '\u266D\u266D7' | 'dom7' | '7' | 'maj7' | 'M7' | '9' | '#9' | '\u266F9' | '11' | '13';
 
 export type Interval = {
+  /** Shortened version of the interval this note represents in a chord. */
   interval: IntervalName;
+  
+  /** A note within a chord. */
   note: Note;
 }
 
 export type ChordNameInfo = {
+  /** The name of this chord, based on the chord name options provided. */
   name: string;
+  
+  /** An arbitrary score assigned to this chord, used for ranking potential chord names. Higher score means a higher rank. */
   score: number;
+  
+  /** The notes (technically intervals) in this chord. */
   notes: Interval[];
+  
+  /** Verbose output of the chord naming algorithm, explaining how the given name was derived. */
   verbose: string[];
 }
 
+/** Types that can be converted to Note. */
+type NoteCastable = string | Note | Pitch;
+
+/** Converts a NoteCastable into a Note. */
+const toNote = (note:NoteCastable): Note => {
+  if(note instanceof Note)
+    return note;
+  if(note instanceof Pitch)
+    return note.getNote();
+  if('string' === typeof note)
+    return new Note(note);
+  
+  // if we get here, it is bypassing typescript type checking
+  throw new Error("Invalid note: " + note);
+}
+
+/** Converts a NoteCastable into a Note, but also allows undefined value. */
+const toNoteOptional = (note: NoteCastable|undefined): Note|undefined => {
+  if(note === undefined)
+    return undefined;
+  return toNote(note);
+}
+
+/**
+ * A chord is a collection of one or more notes. (We don't need three notes which is technically
+ * required for a chord in music theory.) Determining the name of a chord is complicated... see
+ * the getNames() method for more information about that.
+ */
 export default class Chord {
   private readonly notes: Note[] = [];
   private readonly bassNote: Note|null = null;
   
   /**
-   * @param arg1 Can be an array of Note objects, or a string of note names separated by space or comma.
+   * @param notes Can be an array of Note or Pitch objects, an array of strings, or a
+   *              string of note names separated by space or comma.
    */
-  constructor (arg1: string|Array<string|Note|Pitch>) {
+  constructor (notes: string|Array<NoteCastable>) {
     // convert plain string into string array
-    if('string' === typeof arg1)
-      arg1 = arg1.split(/[\s,]+/g).filter(s => s !== '').map(s => new Note(s));
+    if('string' === typeof notes)
+      notes = notes.split(/[\s,]+/g).filter(s => s !== '');
     
     // at this point it should be an array unless we got something weird like null
-    if(Array.isArray(arg1)) {
-      if(arg1.length === 0)
-        throw new Error("Chord cannot be empty");
-      
-      // if this array is all Pitch objects, then we can tell what the lowest pitch is
-      let isPitchArray = true;
-      let lowestPitch:Pitch|null = null;
-      
-      // keep track of what notes we've already encountered so that we don't have duplicates
-      const allNoteIds = new Set<number>();
-      
-      for(let argElement of arg1) {
-        if(isPitchArray && (argElement instanceof Pitch)) {
-          if(lowestPitch === null || argElement.compareTo(lowestPitch) < 0)
-            lowestPitch = argElement;
-        }
-        else {
-          isPitchArray = false;
-          lowestPitch = null;
-        }
-        
-        let note:Note;
-        if('string' === typeof argElement || argElement instanceof Note)
-          note = new Note(argElement);
-        else if (argElement instanceof Pitch)
-          note = argElement.getNote();
-        else
-          throw new Error(`Invalid value in Chord constructor: ${argElement}`);
-        
-        // if this note is already in the chord, don't add it again
-        if(!allNoteIds.has(note.getId())) {
-          this.notes.push(note);
-          allNoteIds.add(note.getId());
-        }
+    if(!Array.isArray(notes))
+      throw new Error("Illegal argument to Chord constructor: " + notes);
+    
+    if(notes.length === 0)
+      throw new Error("Chord cannot be empty");
+    
+    // if this array is all Pitch objects, then we can tell what the lowest pitch is
+    let isPitchArray = true;
+    let lowestPitch:Pitch|null = null;
+    
+    // keep track of what notes we've already encountered so that we don't have duplicates
+    const allNoteIds = new Set<number>();
+    
+    for(let noteCastable of notes) {
+      if(isPitchArray && (noteCastable instanceof Pitch)) {
+        if(lowestPitch === null || noteCastable.compareTo(lowestPitch) < 0)
+          lowestPitch = noteCastable;
+      }
+      else {
+        isPitchArray = false;
+        lowestPitch = null;
       }
       
-      if(lowestPitch)
-        this.bassNote = lowestPitch?.getNote();
+      const note:Note = toNote(noteCastable);
+      
+      // if this note is already in the chord, don't add it again
+      if(!allNoteIds.has(note.getId())) {
+        this.notes.push(note);
+        allNoteIds.add(note.getId());
+      }
     }
+    
+    if(lowestPitch)
+      this.bassNote = lowestPitch.getNote();
   }
   
   /**
-   * Returns the notes of this chord, separated by a string.
+   * Returns the notes of this chord, separated by a space.
    */
   toString(): string {
     return this.notes.map(n => n.toString()).join(' ');
@@ -79,8 +113,14 @@ export default class Chord {
   
   /**
    * Returns all possible names of this chord, by returning determining the name of the chord with each note as root note.
+   * @param rootNote The root note of this chord. Required to generate chord name.
+   * @param _options Options to affect the name of the chord.
+   * @param bassNote If provided, can influence the name of the chord (e.g. "D/F#" chord).
    */
-  getNames(options?:ChordNameOptions, rootNote?:Note, bassNote?:Note): ChordNameInfo[] {
+  getNames(options?:ChordNameOptions, rootNote?:NoteCastable, bassNote?:NoteCastable): ChordNameInfo[] {
+    rootNote = toNoteOptional(rootNote);
+    bassNote = toNoteOptional(bassNote);
+    
     if(rootNote)
       return [this.getName(rootNote, options, bassNote)];
     
@@ -92,7 +132,8 @@ export default class Chord {
   /**
    * Returns whether this chord contains the given note.
    */
-  hasNote(note: Note): boolean {
+  hasNote(note: NoteCastable): boolean {
+    note = toNote(note);
     return (this.notes.findIndex(n => n.equals(note)) >= 0);
   }
   
@@ -140,8 +181,14 @@ export default class Chord {
    *     verbose: [ 'assuming root is C', 'found a min3 - this is a minor chord', 'found 5th', 'found minor 7th' ]
    *   }
    * ```
+   * 
+   * @param _rootNote The root note of this chord. Required to generate chord name.
+   * @param _options Options to affect the name of the chord.
+   * @param _bassNote If provided, can influence the name of the chord (e.g. "D/F#" chord).
    */
-  getName(rootNote: Note, _options?:ChordNameOptions, bassNote?: Note):ChordNameInfo {
+  getName(_rootNote: NoteCastable, _options?:ChordNameOptions, _bassNote?: NoteCastable): ChordNameInfo {
+    const rootNote = toNote(_rootNote);
+    
     const options: SanitizedChordNameOptions = sanitizeChordNameOptions(_options);
     
     let rootName:string = rootNote.getName(options);
@@ -159,7 +206,7 @@ export default class Chord {
     let lowerCaseRoot = false; //will be true if this is a minor chord and omitMinor is true
     
     //if no bass note specified, assume the root note is bass note
-    bassNote = bassNote || this.bassNote || rootNote;
+    const bassNote = toNoteOptional(_bassNote) || this.bassNote || rootNote;
     
     //determine which intervals are present
     let intervals: boolean[] = new Array(12).fill(false);
@@ -170,7 +217,7 @@ export default class Chord {
     
     //interval ids
     const ROOT = 0;
-    const FLAT_SECOND = 1;
+    //const FLAT_SECOND = 1; //unused...
     const SECOND = 2;
     const MIN_THIRD = 3;
     const MAJ_THIRD = 4;
