@@ -1,6 +1,6 @@
 {
   "name": "chord-name",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A library to generate the potential chord names, given a set of notes.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
