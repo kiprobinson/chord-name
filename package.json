@@ -2,11 +2,13 @@
   "name": "chord-name",
   "version": "0.0.1",
   "description": "A library to generate the potential chord names, given a set of notes.",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
     "build": "pnpm clean && tsc",
-    "test": "mocha -r ts-node/register ./test/**/*.test.ts"
+    "test": "mocha -r ts-node/register ./test/**/*.test.ts",
+    "prepublish": "pnpm build"
   },
   "repository": {
     "type": "git",
