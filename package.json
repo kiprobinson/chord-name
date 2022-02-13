@@ -4,7 +4,7 @@
   "description": "A library to generate the potential chord names, given a set of notes.",
   "main": "index.ts",
   "scripts": {
-    "clean": "rimraf built dist",
+    "clean": "rimraf dist",
     "build": "pnpm clean && tsc",
     "test": "mocha -r ts-node/register ./test/**/*.test.ts"
   },

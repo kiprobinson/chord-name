@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "built",
+    "outDir": "dist",
     "strict": true,
     "module": "commonjs",
     "esModuleInterop": true,
@@ -10,5 +10,10 @@
     "sourceMap": false,
     "noFallthroughCasesInSwitch": true
   },
-  "lib": ["es2015"]
+  "lib": ["es2015"],
+  "exclude": [
+    "node_modules",
+    "test",
+    "dist"
+  ]
 }
