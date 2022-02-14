@@ -8,7 +8,8 @@
     "clean": "rimraf dist",
     "build": "pnpm clean && tsc",
     "test": "mocha -r ts-node/register ./test/**/*.test.ts",
-    "prepublish": "pnpm build"
+    "prepublish": "pnpm build",
+    "docs": "typedoc src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
     "mocha": "^9.1.4",
     "rimraf": "^3.0.2",
     "ts-node": "^10.4.0",
+    "typedoc": "^0.22.11",
     "typescript": "^4.5.4"
   }
 }
