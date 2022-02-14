@@ -44,10 +44,10 @@ export type ChordNameOptions = {
   
   /** 
    * Symbol to used for a dimished chord.
-   * **Note:** a value of 'o' (lower-case letter O) will be changed to unicode degree symbol (`\u1D52`)
+   * **Note:** special value "unicode" will be changed to unicode degree symbol (`\u1D52`)
    * Default: `dim`
    */
-  dimSymbol?: 'dim'|'o'|'\u1D52';
+  dimSymbol?: 'dim'|'o'|'\u1D52'|'unicode';
   
   /**
    * Whether to use unicode symbols for accidentals.
@@ -84,7 +84,7 @@ export type SanitizedChordNameOptions = {
   minorSymbol: 'min'|'m'|'-';
   omitMinor: boolean;
   augSymbol: 'aug'|'+';
-  dimSymbol: 'dim'|'\u1D52';
+  dimSymbol: 'dim'|'o'|'\u1D52';
   unicodeHalfDiminished: boolean;
   halfDimSymbol: '\u00F8'|'';
   useHtml: boolean;
@@ -107,7 +107,7 @@ export const sanitizeChordNameOptions = (options?: ChordNameOptions): SanitizedC
   const minorSymbol = (options.minorSymbol === 'min' || options.minorSymbol === 'm' || options.minorSymbol === '-') ? options.minorSymbol : 'm';
   const omitMinor = options.omitMinor === true;
   const augSymbol = (options.augSymbol === 'aug' || options.augSymbol === '+') ? options.augSymbol : 'aug';
-  const dimSymbol = (options.dimSymbol === 'o' || options.dimSymbol === '\u1D52') ? '\u1D52' : 'dim';
+  const dimSymbol = (options.dimSymbol === '\u1D52' || options.dimSymbol === 'unicode') ? '\u1D52' : (options.dimSymbol === 'o' ? 'o' : 'dim');
   const unicodeHalfDiminished = options.unicodeHalfDiminished === true;
   const halfDimSymbol = unicodeHalfDiminished ? '\u00F8' : '';
   const useHtml = options.useHtml === true;

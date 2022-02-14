@@ -72,8 +72,9 @@ describe('test chord name options class', () => {
   
   it('test sanitizeChordNameOptions - dimSymbol', () => {
     expect(sanitizeChordNameOptions({dimSymbol: 'dim'})).to.deep.equal({...SANITIZED_DEFAULTS});
-    expect(sanitizeChordNameOptions({dimSymbol: 'o'})).to.deep.equal({...SANITIZED_DEFAULTS, dimSymbol: '\u1D52'});
+    expect(sanitizeChordNameOptions({dimSymbol: 'o'})).to.deep.equal({...SANITIZED_DEFAULTS, dimSymbol: 'o'});
     expect(sanitizeChordNameOptions({dimSymbol: '\u1D52'})).to.deep.equal({...SANITIZED_DEFAULTS, dimSymbol: '\u1D52'});
+    expect(sanitizeChordNameOptions({dimSymbol: 'unicode'})).to.deep.equal({...SANITIZED_DEFAULTS, dimSymbol: '\u1D52'});
     //@ts-expect-error
     expect(sanitizeChordNameOptions({useFlats: 'bogus'})).to.deep.equal({...SANITIZED_DEFAULTS});
   });
