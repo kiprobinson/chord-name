@@ -6,109 +6,109 @@ describe('test Note class', () => {
   it('create note from string', () => {
     expect(new Note('C').getName()).to.equal('C');
     expect(new Note('c').getName()).to.equal('C');
-    expect(new Note('A#').getName()).to.equal('A#');
-    expect(new Note('a#').getName()).to.equal('A#');
+    expect(new Note('A#').getName()).to.equal('A♯');
+    expect(new Note('a#').getName()).to.equal('A♯');
     
-    expect(new Note('BB').getName()).to.equal('A#');
-    expect(new Note('Bb').getName()).to.equal('A#');
-    expect(new Note('bB').getName()).to.equal('A#');
-    expect(new Note('bb').getName()).to.equal('A#');
+    expect(new Note('BB').getName()).to.equal('A♯');
+    expect(new Note('Bb').getName()).to.equal('A♯');
+    expect(new Note('bB').getName()).to.equal('A♯');
+    expect(new Note('bb').getName()).to.equal('A♯');
     
-    expect(new Note('AB').getName()).to.equal('G#');
-    expect(new Note('Ab').getName()).to.equal('G#');
-    expect(new Note('aB').getName()).to.equal('G#');
-    expect(new Note('ab').getName()).to.equal('G#');
+    expect(new Note('AB').getName()).to.equal('G♯');
+    expect(new Note('Ab').getName()).to.equal('G♯');
+    expect(new Note('aB').getName()).to.equal('G♯');
+    expect(new Note('ab').getName()).to.equal('G♯');
     
-    expect(new Note('db').getName()).to.equal('C#');
+    expect(new Note('db').getName()).to.equal('C♯');
     expect(new Note('d' ).getName()).to.equal('D');
-    expect(new Note('eb').getName()).to.equal('D#');
+    expect(new Note('eb').getName()).to.equal('D♯');
     expect(new Note('e' ).getName()).to.equal('E');
     expect(new Note('f' ).getName()).to.equal('F');
-    expect(new Note('gb').getName()).to.equal('F#');
+    expect(new Note('gb').getName()).to.equal('F♯');
     expect(new Note('g' ).getName()).to.equal('G');
-    expect(new Note('ab').getName()).to.equal('G#');
+    expect(new Note('ab').getName()).to.equal('G♯');
     expect(new Note('a' ).getName()).to.equal('A');
-    expect(new Note('bb').getName()).to.equal('A#');
+    expect(new Note('bb').getName()).to.equal('A♯');
     expect(new Note('b' ).getName()).to.equal('B');
-    expect(new Note('c#').getName()).to.equal('C#');
+    expect(new Note('c#').getName()).to.equal('C♯');
     expect(new Note('d' ).getName()).to.equal('D');
-    expect(new Note('d#').getName()).to.equal('D#');
+    expect(new Note('d#').getName()).to.equal('D♯');
     expect(new Note('e' ).getName()).to.equal('E');
     expect(new Note('f' ).getName()).to.equal('F');
-    expect(new Note('f#').getName()).to.equal('F#');
+    expect(new Note('f#').getName()).to.equal('F♯');
     expect(new Note('g' ).getName()).to.equal('G');
-    expect(new Note('g#').getName()).to.equal('G#');
+    expect(new Note('g#').getName()).to.equal('G♯');
     expect(new Note('a' ).getName()).to.equal('A');
-    expect(new Note('a#').getName()).to.equal('A#');
+    expect(new Note('a#').getName()).to.equal('A♯');
     expect(new Note('b' ).getName()).to.equal('B');
   });
   
   it('get note names as flats', () => {
-    expect(new Note('A#').getName({useFlats:true})).to.equal('Bb');
-    expect(new Note('A#').getName({useFlats:false})).to.equal('A#');
+    expect(new Note('A#').getName({useFlats:true})).to.equal('B♭');
+    expect(new Note('A#').getName({useFlats:false})).to.equal('A♯');
     
-    expect(new Note('BB').getName({useFlats:true})).to.equal('Bb');
-    expect(new Note('Bb').getName({useFlats:true})).to.equal('Bb');
-    expect(new Note('bB').getName({useFlats:true})).to.equal('Bb');
-    expect(new Note('bb').getName({useFlats:true})).to.equal('Bb');
+    expect(new Note('BB').getName({useFlats:true})).to.equal('B♭');
+    expect(new Note('Bb').getName({useFlats:true})).to.equal('B♭');
+    expect(new Note('bB').getName({useFlats:true})).to.equal('B♭');
+    expect(new Note('bb').getName({useFlats:true})).to.equal('B♭');
     
-    expect(new Note('AB').getName({useFlats:true})).to.equal('Ab');
-    expect(new Note('Ab').getName({useFlats:true})).to.equal('Ab');
-    expect(new Note('aB').getName({useFlats:true})).to.equal('Ab');
-    expect(new Note('ab').getName({useFlats:true})).to.equal('Ab');
+    expect(new Note('AB').getName({useFlats:true})).to.equal('A♭');
+    expect(new Note('Ab').getName({useFlats:true})).to.equal('A♭');
+    expect(new Note('aB').getName({useFlats:true})).to.equal('A♭');
+    expect(new Note('ab').getName({useFlats:true})).to.equal('A♭');
     
-    expect(new Note('db').getName({useFlats:true})).to.equal('Db');
+    expect(new Note('db').getName({useFlats:true})).to.equal('D♭');
     expect(new Note('d' ).getName({useFlats:true})).to.equal('D');
-    expect(new Note('eb').getName({useFlats:true})).to.equal('Eb');
+    expect(new Note('eb').getName({useFlats:true})).to.equal('E♭');
     expect(new Note('e' ).getName({useFlats:true})).to.equal('E');
     expect(new Note('f' ).getName({useFlats:true})).to.equal('F');
-    expect(new Note('gb').getName({useFlats:true})).to.equal('Gb');
+    expect(new Note('gb').getName({useFlats:true})).to.equal('G♭');
     expect(new Note('g' ).getName({useFlats:true})).to.equal('G');
-    expect(new Note('ab').getName({useFlats:true})).to.equal('Ab');
+    expect(new Note('ab').getName({useFlats:true})).to.equal('A♭');
     expect(new Note('a' ).getName({useFlats:true})).to.equal('A');
-    expect(new Note('bb').getName({useFlats:true})).to.equal('Bb');
+    expect(new Note('bb').getName({useFlats:true})).to.equal('B♭');
     expect(new Note('b' ).getName({useFlats:true})).to.equal('B');
-    expect(new Note('c#').getName({useFlats:true})).to.equal('Db');
+    expect(new Note('c#').getName({useFlats:true})).to.equal('D♭');
     expect(new Note('d' ).getName({useFlats:true})).to.equal('D');
-    expect(new Note('d#').getName({useFlats:true})).to.equal('Eb');
+    expect(new Note('d#').getName({useFlats:true})).to.equal('E♭');
     expect(new Note('e' ).getName({useFlats:true})).to.equal('E');
     expect(new Note('f' ).getName({useFlats:true})).to.equal('F');
-    expect(new Note('f#').getName({useFlats:true})).to.equal('Gb');
+    expect(new Note('f#').getName({useFlats:true})).to.equal('G♭');
     expect(new Note('g' ).getName({useFlats:true})).to.equal('G');
-    expect(new Note('g#').getName({useFlats:true})).to.equal('Ab');
+    expect(new Note('g#').getName({useFlats:true})).to.equal('A♭');
     expect(new Note('a' ).getName({useFlats:true})).to.equal('A');
-    expect(new Note('a#').getName({useFlats:true})).to.equal('Bb');
+    expect(new Note('a#').getName({useFlats:true})).to.equal('B♭');
     expect(new Note('b' ).getName({useFlats:true})).to.equal('B');
   });
   
   it('create/name notes with unicode', () => {
-    expect(new Note('B♭').getName()).to.equal('A#');
-    expect(new Note('b♭').getName()).to.equal('A#');
-    expect(new Note('A♭').getName()).to.equal('G#');
-    expect(new Note('a♭').getName()).to.equal('G#');
-    expect(new Note('A♯').getName()).to.equal('A#');
-    expect(new Note('a♯').getName()).to.equal('A#');
+    expect(new Note('B♭').getName({unicodeAccidentals: false})).to.equal('A#');
+    expect(new Note('b♭').getName({unicodeAccidentals: false})).to.equal('A#');
+    expect(new Note('A♭').getName({unicodeAccidentals: false})).to.equal('G#');
+    expect(new Note('a♭').getName({unicodeAccidentals: false})).to.equal('G#');
+    expect(new Note('A♯').getName({unicodeAccidentals: false})).to.equal('A#');
+    expect(new Note('a♯').getName({unicodeAccidentals: false})).to.equal('A#');
     
-    expect(new Note('B♭').getName({useFlats:false, unicodeAccidentals: true})).to.equal('A♯');
-    expect(new Note('b♭').getName({useFlats:false, unicodeAccidentals: true})).to.equal('A♯');
-    expect(new Note('A♭').getName({useFlats:false, unicodeAccidentals: true})).to.equal('G♯');
-    expect(new Note('a♭').getName({useFlats:false, unicodeAccidentals: true})).to.equal('G♯');
-    expect(new Note('A♯').getName({useFlats:false, unicodeAccidentals: true})).to.equal('A♯');
-    expect(new Note('a♯').getName({useFlats:false, unicodeAccidentals: true})).to.equal('A♯');
+    expect(new Note('B♭').getName()).to.equal('A♯');
+    expect(new Note('b♭').getName()).to.equal('A♯');
+    expect(new Note('A♭').getName()).to.equal('G♯');
+    expect(new Note('a♭').getName()).to.equal('G♯');
+    expect(new Note('A♯').getName()).to.equal('A♯');
+    expect(new Note('a♯').getName()).to.equal('A♯');
     
-    expect(new Note('B♭').getName({useFlats:true})).to.equal('Bb');
-    expect(new Note('b♭').getName({useFlats:true})).to.equal('Bb');
-    expect(new Note('A♭').getName({useFlats:true})).to.equal('Ab');
-    expect(new Note('a♭').getName({useFlats:true})).to.equal('Ab');
-    expect(new Note('A♯').getName({useFlats:true})).to.equal('Bb');
-    expect(new Note('a♯').getName({useFlats:true})).to.equal('Bb');
+    expect(new Note('B♭').getName({useFlats:true, unicodeAccidentals: false})).to.equal('Bb');
+    expect(new Note('b♭').getName({useFlats:true, unicodeAccidentals: false})).to.equal('Bb');
+    expect(new Note('A♭').getName({useFlats:true, unicodeAccidentals: false})).to.equal('Ab');
+    expect(new Note('a♭').getName({useFlats:true, unicodeAccidentals: false})).to.equal('Ab');
+    expect(new Note('A♯').getName({useFlats:true, unicodeAccidentals: false})).to.equal('Bb');
+    expect(new Note('a♯').getName({useFlats:true, unicodeAccidentals: false})).to.equal('Bb');
     
-    expect(new Note('B♭').getName({useFlats:true, unicodeAccidentals: true})).to.equal('B♭');
-    expect(new Note('b♭').getName({useFlats:true, unicodeAccidentals: true})).to.equal('B♭');
-    expect(new Note('A♭').getName({useFlats:true, unicodeAccidentals: true})).to.equal('A♭');
-    expect(new Note('a♭').getName({useFlats:true, unicodeAccidentals: true})).to.equal('A♭');
-    expect(new Note('A♯').getName({useFlats:true, unicodeAccidentals: true})).to.equal('B♭');
-    expect(new Note('a♯').getName({useFlats:true, unicodeAccidentals: true})).to.equal('B♭');
+    expect(new Note('B♭').getName({useFlats:true})).to.equal('B♭');
+    expect(new Note('b♭').getName({useFlats:true})).to.equal('B♭');
+    expect(new Note('A♭').getName({useFlats:true})).to.equal('A♭');
+    expect(new Note('a♭').getName({useFlats:true})).to.equal('A♭');
+    expect(new Note('A♯').getName({useFlats:true})).to.equal('B♭');
+    expect(new Note('a♯').getName({useFlats:true})).to.equal('B♭');
   });
   
   it('negative tests for creating notes', () => {
@@ -133,30 +133,30 @@ describe('test Note class', () => {
   
   it('create note by id', () => {
     expect(new Note(0).getName()).to.equal('C');
-    expect(new Note(1).getName()).to.equal('C#');
+    expect(new Note(1).getName()).to.equal('C♯');
     expect(new Note(2).getName()).to.equal('D');
-    expect(new Note(3).getName()).to.equal('D#');
+    expect(new Note(3).getName()).to.equal('D♯');
     expect(new Note(4).getName()).to.equal('E');
     expect(new Note(5).getName()).to.equal('F');
-    expect(new Note(6).getName()).to.equal('F#');
+    expect(new Note(6).getName()).to.equal('F♯');
     expect(new Note(7).getName()).to.equal('G');
-    expect(new Note(8).getName()).to.equal('G#');
+    expect(new Note(8).getName()).to.equal('G♯');
     expect(new Note(9).getName()).to.equal('A');
-    expect(new Note(10).getName()).to.equal('A#');
+    expect(new Note(10).getName()).to.equal('A♯');
     expect(new Note(11).getName()).to.equal('B');
     
     //starts repeating above 11
     expect(new Note(12).getName()).to.equal('C');
-    expect(new Note(13).getName()).to.equal('C#');
+    expect(new Note(13).getName()).to.equal('C♯');
     expect(new Note(23).getName()).to.equal('B');
     expect(new Note(24).getName()).to.equal('C');
     
     //repeats in negatives too
     expect(new Note(-1).getName()).to.equal('B');
-    expect(new Note(-2).getName()).to.equal('A#');
-    expect(new Note(-11).getName()).to.equal('C#');
+    expect(new Note(-2).getName()).to.equal('A♯');
+    expect(new Note(-11).getName()).to.equal('C♯');
     expect(new Note(-12).getName()).to.equal('C');
-    expect(new Note(-23).getName()).to.equal('C#');
+    expect(new Note(-23).getName()).to.equal('C♯');
     expect(new Note(-25).getName()).to.equal('B');
   });
   
@@ -188,8 +188,8 @@ describe('test Note class', () => {
     expect(new Note('E').transpose(-4).getName()).to.equal('C');
     expect(new Note('G').transpose(12).getName()).to.equal('G');
     expect(new Note('G').transpose(-12).getName()).to.equal('G');
-    expect(new Note('F#').transpose(7).getName()).to.equal('C#');
-    expect(new Note('C#').transpose(-7).getName()).to.equal('F#');
+    expect(new Note('F#').transpose(7).getName()).to.equal('C♯');
+    expect(new Note('C#').transpose(-7).getName()).to.equal('F♯');
   });
   
   it('equals note', () => {

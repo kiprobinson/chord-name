@@ -7,17 +7,17 @@ describe('test Pitch class', () => {
   it('create pitch', () => {
     expect(new Pitch(new Note('C'), 0).getName()).to.equal('C0');
     expect(new Pitch(new Note('B'), 8).getName()).to.equal('B8');
-    expect(new Pitch(new Note('G#'), 5).getName()).to.equal('G#5');
-    expect(new Pitch(new Note('Gb'), 3).getName()).to.equal('F#3');
+    expect(new Pitch(new Note('G#'), 5).getName()).to.equal('G♯5');
+    expect(new Pitch(new Note('Gb'), 3).getName()).to.equal('F♯3');
   });
   
   it('create pitch from string', () => {
     expect(new Pitch('C0').getName()).to.equal('C0');
     expect(new Pitch('B8').getName()).to.equal('B8');
-    expect(new Pitch('G#5').getName()).to.equal('G#5');
-    expect(new Pitch('Gb3').getName()).to.equal('F#3');
+    expect(new Pitch('G#5').getName()).to.equal('G♯5');
+    expect(new Pitch('Gb3').getName()).to.equal('F♯3');
     expect(new Pitch('b2').getName()).to.equal('B2');
-    expect(new Pitch('bB4').getName()).to.equal('A#4');
+    expect(new Pitch('bB4').getName()).to.equal('A♯4');
   });
   
   it('create pitch negative tests', () => {
@@ -38,18 +38,18 @@ describe('test Pitch class', () => {
   it('get pitch name as flats', () => {
     expect(new Pitch(new Note('C'), 0).getName({useFlats:true})).to.equal('C0');
     expect(new Pitch(new Note('B'), 8).getName({useFlats:true})).to.equal('B8');
-    expect(new Pitch(new Note('G#'), 3).getName({useFlats:true})).to.equal('Ab3');
-    expect(new Pitch(new Note('Gb'), 5).getName({useFlats:true})).to.equal('Gb5');
+    expect(new Pitch(new Note('G#'), 3).getName({useFlats:true})).to.equal('A♭3');
+    expect(new Pitch(new Note('Gb'), 5).getName({useFlats:true})).to.equal('G♭5');
   });
   
   it('transpose pitch', () => {
-    expect(new Pitch(new Note('C'), 4).transpose(3).getName()).to.equal('D#4');
+    expect(new Pitch(new Note('C'), 4).transpose(3).getName()).to.equal('D♯4');
     expect(new Pitch(new Note('Bb'), 4).transpose(6).getName()).to.equal('E5');
     expect(new Pitch(new Note('B'), 0).transpose(1).getName()).to.equal('C1');
     expect(new Pitch(new Note('C'), 1).transpose(-1).getName()).to.equal('B0');
     
-    expect(new Pitch(new Note('Ab'), 3).transpose(14).getName()).to.equal('A#4');
-    expect(new Pitch(new Note('Eb'), 3).transpose(-14).getName()).to.equal('C#2');
+    expect(new Pitch(new Note('Ab'), 3).transpose(14).getName()).to.equal('A♯4');
+    expect(new Pitch(new Note('Eb'), 3).transpose(-14).getName()).to.equal('C♯2');
     
     expect(new Pitch(new Note('C'), 0).transpose(0).getName()).to.equal('C0');
     expect(new Pitch(new Note('B'), 8).transpose(0).getName()).to.equal('B8');

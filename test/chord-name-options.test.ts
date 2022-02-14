@@ -4,9 +4,9 @@ import { sanitizeChordNameOptions } from "../src/chord-name-options";
 //shortcuts to make tests less tedious to write...
 const SANITIZED_DEFAULTS = {
   useFlats: false,
-  unicodeAccidentals: false,
-  flatSymbol: 'b',
-  sharpSymbol: '#',
+  unicodeAccidentals: true,
+  flatSymbol: '♭',
+  sharpSymbol: '♯',
   majorSymbol: 'maj',
   omitMajor: true,
   minorSymbol: 'm',
@@ -80,8 +80,8 @@ describe('test chord name options class', () => {
   });
   
   it('test sanitizeChordNameOptions - unicodeAccidentals', () => {
-    expect(sanitizeChordNameOptions({unicodeAccidentals: false})).to.deep.equal({...SANITIZED_DEFAULTS});
-    expect(sanitizeChordNameOptions({unicodeAccidentals: true})).to.deep.equal({...SANITIZED_DEFAULTS, unicodeAccidentals: true, flatSymbol: '\u266D', sharpSymbol: '\u266F'});
+    expect(sanitizeChordNameOptions({unicodeAccidentals: false})).to.deep.equal({...SANITIZED_DEFAULTS, unicodeAccidentals: false, flatSymbol: 'b', sharpSymbol: '#'});
+    expect(sanitizeChordNameOptions({unicodeAccidentals: true})).to.deep.equal({...SANITIZED_DEFAULTS});
     //@ts-expect-error
     expect(sanitizeChordNameOptions({useFlats: 'true'})).to.deep.equal({...SANITIZED_DEFAULTS});
   });

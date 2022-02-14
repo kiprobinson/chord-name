@@ -53,7 +53,7 @@ export type ChordNameOptions = {
    * Whether to use unicode symbols for accidentals.
    * If true, sharp is represented by `\u266F`, flat by `\d266D`.
    * If false, sharp is represented by `#`, flat by `b`.
-   * Default: `false`
+   * Default: `true`
    */
   unicodeAccidentals?: boolean;
   
@@ -99,7 +99,7 @@ export const sanitizeChordNameOptions = (options?: ChordNameOptions): SanitizedC
     options = {};
   
   const useFlats = options.useFlats === true;
-  const unicodeAccidentals = options.unicodeAccidentals === true;
+  const unicodeAccidentals = options.unicodeAccidentals !== false;
   const flatSymbol = unicodeAccidentals ? '\u266D' : 'b';
   const sharpSymbol = unicodeAccidentals ? '\u266F' : '#';
   const majorSymbol = (options.majorSymbol === 'maj' || options.majorSymbol === 'M') ? options.majorSymbol : 'maj';
