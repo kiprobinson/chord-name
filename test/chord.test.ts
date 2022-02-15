@@ -54,6 +54,13 @@ describe('test Chord class', () => {
     expect(() => new Chord([new Date()])).to.throw;
   });
   
+  it('get chord name - verbose option', () => {
+    expect(crd('C E G').getName(c).verbose).to.be.undefined;
+    
+    //not going to try to test the actual content of the verbose output as it may change...
+    expect(crd('C E G').getName(c, {verbose:true}).verbose).to.not.be.undefined;
+  });
+  
   it('get chord name - single note "chord"', () => {
     expect(crd('C').getName(c).name).to.equal('C');
     expect(crd('C').getName('C').name).to.equal('C');

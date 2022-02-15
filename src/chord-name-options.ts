@@ -69,6 +69,12 @@ export type ChordNameOptions = {
    * Default: `false`
    */
   useHtml?: boolean;
+  
+  /**
+   * Whether to include verbose information as to why a particular chord name was chosen.
+   * Default: `false`
+   */
+  verbose?: boolean;
 }
 
 /**
@@ -88,6 +94,7 @@ export type SanitizedChordNameOptions = {
   unicodeHalfDiminished: boolean;
   halfDimSymbol: '\u00F8'|'';
   useHtml: boolean;
+  verbose: boolean;
 }
 
 /**
@@ -111,6 +118,7 @@ export const sanitizeChordNameOptions = (options?: ChordNameOptions): SanitizedC
   const unicodeHalfDiminished = options.unicodeHalfDiminished === true;
   const halfDimSymbol = unicodeHalfDiminished ? '\u00F8' : '';
   const useHtml = options.useHtml === true;
+  const verbose = options.verbose === true;
   
   return {
     useFlats,
@@ -126,5 +134,6 @@ export const sanitizeChordNameOptions = (options?: ChordNameOptions): SanitizedC
     unicodeHalfDiminished,
     halfDimSymbol,
     useHtml,
+    verbose,
   };
 }

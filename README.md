@@ -65,8 +65,7 @@ OUTPUT:
       "note": new Note("G")
     }
   ],
-  "score": 33,
-  "verbose": [ .... ]
+  "score": 33
 }
 
 
@@ -95,8 +94,7 @@ OUTPUT:
         "note": new Note("G")
       }
     ],
-    "score": 33,
-    "verbose": [ .... ]
+    "score": 33
   },
   {
     "name": "C6",
@@ -118,8 +116,7 @@ OUTPUT:
         "note": new Note("A")
       }
     ],
-    "score": 31,
-    "verbose": [ .... ]
+    "score": 31
   },
   {
     "name": "Em(#5)add11",
@@ -141,8 +138,7 @@ OUTPUT:
         "note": new Note("A")
       }
     ],
-    "score": 18,
-    "verbose": [ .... ]
+    "score": 18
   },
   {
     "name": "G6/9sus4(no5)",
@@ -164,8 +160,7 @@ OUTPUT:
         "note": new Note("C")
       }
     ],
-    "score": 2,
-    "verbose": [ .... ]
+    "score": 2
   }
 ]
 
