@@ -8,8 +8,8 @@ export type Interval = {
   /** Shortened version of the interval this note represents in a chord. */
   interval: IntervalName;
   
-  /** A note within a chord. */
-  note: Note;
+  /** A note within a chord. Type depends on the `returnPojo` parameter. */
+  note: Note|string;
 }
 
 export type ChordNameInfo = {
@@ -200,7 +200,7 @@ export default class Chord {
     let bass = '';
     
     const verbose: string[]|undefined = options.verbose ? [] : undefined;
-    const noteDetails: Interval[] = [];
+    const noteDetails: Array<{interval:IntervalName, note:Note}> = [];
     let score = 0;
     
     let lowerCaseRoot = false; //will be true if this is a minor chord and omitMinor is true
@@ -806,9 +806,13 @@ export default class Chord {
     name += (name.match(/[ac-z]$/) && added.match(/^[a-z]/) ? bracketize(added) : added);
     name += bracketize(omissions) + bass;
     
+    let notes: Interval[] = noteDetails;
+    if(options.returnPojo)
+      notes = noteDetails.map(v => ({...v, note: v.note.getName(options)}))
+    
     return {
       name,
-      notes: noteDetails,
+      notes,
       score,
       verbose,
     };

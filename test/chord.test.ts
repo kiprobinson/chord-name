@@ -61,6 +61,33 @@ describe('test Chord class', () => {
     expect(crd('C E G').getName(c, {verbose:true}).verbose).to.not.be.undefined;
   });
   
+  it('get chord name - returnPojo option', () => {
+    let expected;
+    
+    expected = [
+      {interval: 'R', note: new Note('C#')},
+      {interval: '3', note: new Note('F')},
+      {interval: '5', note: new Note('G#')},
+    ];
+    expect(crd('C# F G#').getName('C#').notes).to.deep.equal(expected);
+    
+    // with returnPojo option, note value is a plain string instead of Note instance
+    expected = [
+      {interval: 'R', note: 'C♯'},
+      {interval: '3', note: 'F'},
+      {interval: '5', note: 'G♯'},
+    ];
+    expect(crd('C# F G#').getName('C#', {returnPojo:true}).notes).to.deep.equal(expected);
+    
+    // verify useFlats and unicodeAccidental options apply to stringifying of note
+    expected = [
+      {interval: 'R', note: 'Db'},
+      {interval: '3', note: 'F'},
+      {interval: '5', note: 'Ab'},
+    ];
+    expect(crd('C# F G#').getName('C#', {returnPojo:true, useFlats: true, unicodeAccidentals: false}).notes).to.deep.equal(expected);
+  });
+  
   it('get chord name - single note "chord"', () => {
     expect(crd('C').getName(c).name).to.equal('C');
     expect(crd('C').getName('C').name).to.equal('C');
