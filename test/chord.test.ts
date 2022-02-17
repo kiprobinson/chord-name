@@ -88,6 +88,20 @@ describe('test Chord class', () => {
     expect(crd('C# F G#').getName('C#', {returnPojo:true, useFlats: true, unicodeAccidentals: false}).notes).to.deep.equal(expected);
   });
   
+  it('get chord name - unicodeAccidentals option applies to interval names', () => {
+    expect(crd('C# F A').getName('C#').notes.map(v => v.interval)).to.deep.equal(['R', '3', '♯5']);
+    expect(crd('C# F A').getName('C#', {unicodeAccidentals: false}).notes.map(v => v.interval)).to.deep.equal(['R', '3', '#5']);
+    
+    expect(crd('C# E G A#').getName('C#').notes.map(v => v.interval)).to.deep.equal(['R', 'm3', '♭5', '♭♭7']);
+    expect(crd('C# E G A#').getName('C#', {unicodeAccidentals: false}).notes.map(v => v.interval)).to.deep.equal(['R', 'm3', 'b5', 'bb7']);
+    
+    expect(crd('C# D').getName('C#').notes.map(v => v.interval)).to.deep.equal(['R', '♭2']);
+    expect(crd('C# D').getName('C#', {unicodeAccidentals: false}).notes.map(v => v.interval)).to.deep.equal(['R', 'b2']);
+    
+    expect(crd('C# F G# B E').getName('C#').notes.map(v => v.interval)).to.deep.equal(['R', '3', '5', '7', '♯9']);
+    expect(crd('C# F G# B E').getName('C#', {unicodeAccidentals: false}).notes.map(v => v.interval)).to.deep.equal(['R', '3', '5', '7', '#9']);
+  });
+  
   it('get chord name - single note "chord"', () => {
     expect(crd('C').getName(c).name).to.equal('C');
     expect(crd('C').getName('C').name).to.equal('C');
@@ -111,6 +125,7 @@ describe('test Chord class', () => {
     expect(crd('C E G').getName(c).name).to.equal('C');
     expect(crd('C Eb G').getName(c).name).to.equal('Cm');
     expect(crd('C E G#').getName(c).name).to.equal('Caug');
+    expect(crd('C E G#').getName(c, {augSymbol: '+'}).name).to.equal('C+');
     expect(crd('C Eb Gb').getName(c).name).to.equal('Cdim');
     expect(crd('C Eb Gb').getName(c, {dimSymbol: 'o'}).name).to.equal('Co');
     expect(crd('C Eb Gb').getName(c, {dimSymbol: 'unicode'}).name).to.equal('C\u1D52');
@@ -265,11 +280,88 @@ describe('test Chord class', () => {
     expect(crd('C G B A').getName(c).name).to.equal('Cmaj13sus');
   });
   
+  it('get chord name - additional formatting', () => {
+    expect(crd('C E G').getName(c).name).to.equal('C');
+    expect(crd('C Eb G').getName(c).name).to.equal('Cm');
+    expect(crd('C E G#').getName(c).name).to.equal('Caug');
+    expect(crd('C E G#').getName(c, {augSymbol: '+'}).name).to.equal('C+');
+    expect(crd('C Eb Gb').getName(c).name).to.equal('Cdim');
+    expect(crd('C Eb Gb').getName(c, {dimSymbol: 'o'}).name).to.equal('Co');
+    expect(crd('C Eb Gb').getName(c, {dimSymbol: 'unicode'}).name).to.equal('C\u1D52');
+    expect(crd('C Eb Gb').getName(c, {dimSymbol: 'ᵒ'}).name).to.equal('C\u1D52');
+    expect(crd('C E Gb').getName(c).name).to.equal('C(♭5)');
+    expect(crd('C Eb G#').getName(c).name).to.equal('Cm(♯5)');
+  });
+  
+  it('get chord name - addX are bracketed when necessary', () => {
+    expect(crd('C E G D').getName(c).name).to.equal('Cadd9');
+    expect(crd('C E G D').getName(c, {omitMajor: false, majorSymbol: 'maj'}).name).to.equal('Cmaj(add9)');
+    expect(crd('C E G D').getName(c, {omitMajor: false, majorSymbol: 'M'}).name).to.equal('CMadd9');
+    expect(crd('C Eb G D').getName(c).name).to.equal('Cm(add9)');
+    expect(crd('C Eb G D').getName(c, {minorSymbol: 'min'}).name).to.equal('Cmin(add9)');
+    expect(crd('C Eb G D').getName(c, {minorSymbol: '-'}).name).to.equal('C-add9');
+    expect(crd('C Eb G D').getName(c, {omitMinor: true}).name).to.equal('c(add9)');
+    expect(crd('C E G# D').getName(c).name).to.equal('Caug(add9)');
+    expect(crd('C E G# D').getName(c, {augSymbol: '+'}).name).to.equal('C+add9');
+    expect(crd('C Eb Gb D').getName(c).name).to.equal('Cdim(add9)');
+    expect(crd('C Eb Gb D').getName(c, {dimSymbol: 'o'}).name).to.equal('Co(add9)');
+    expect(crd('C Eb Gb D').getName(c, {dimSymbol: 'ᵒ'}).name).to.equal('Cᵒadd9');
+    expect(crd('C E Gb D').getName(c).name).to.equal('C(♭5)add9');
+  });
+  
+  it('get chord name - multiple addX are bracketed when necessary', () => {
+    expect(crd('C E G D C#').getName(c).name).to.equal('Cadd9add♭2');
+    expect(crd('C E G D C#').getName(c, {omitMajor: false, majorSymbol: 'maj'}).name).to.equal('Cmaj(add9add♭2)');
+    expect(crd('C E G D C#').getName(c, {omitMajor: false, majorSymbol: 'M'}).name).to.equal('CMadd9add♭2');
+    expect(crd('C Eb G D C#').getName(c).name).to.equal('Cm(add9add♭2)');
+    expect(crd('C Eb G D C#').getName(c, {minorSymbol: 'min'}).name).to.equal('Cmin(add9add♭2)');
+    expect(crd('C Eb G D C#').getName(c, {minorSymbol: '-'}).name).to.equal('C-add9add♭2');
+    expect(crd('C Eb G D C#').getName(c, {omitMinor: true}).name).to.equal('c(add9add♭2)');
+    expect(crd('C E G# D C#').getName(c).name).to.equal('Caug(add9add♭2)');
+    expect(crd('C E G# D C#').getName(c, {augSymbol: '+'}).name).to.equal('C+add9add♭2');
+    expect(crd('C Eb Gb D C#').getName(c).name).to.equal('Cdim(add9add♭2)');
+    expect(crd('C Eb Gb D C#').getName(c, {dimSymbol: 'o'}).name).to.equal('Co(add9add♭2)');
+    expect(crd('C Eb Gb D C#').getName(c, {dimSymbol: 'ᵒ'}).name).to.equal('Cᵒadd9add♭2');
+    expect(crd('C E Gb D C#').getName(c).name).to.equal('C(♭5)add9add♭2');
+  });
+  
+  it('get chord name - addX is not bracketed after lower-case "b"', () => {
+    expect(crd('C E G D').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false}).name).to.equal('Dbadd9');
+    expect(crd('C E G D').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, omitMajor: false, majorSymbol: 'maj'}).name).to.equal('Dbmaj(add9)');
+    expect(crd('C E G D').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, omitMajor: false, majorSymbol: 'M'}).name).to.equal('DbMadd9');
+    expect(crd('C Eb G D').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false}).name).to.equal('Dbm(add9)');
+    expect(crd('C Eb G D').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, minorSymbol: 'min'}).name).to.equal('Dbmin(add9)');
+    expect(crd('C Eb G D').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, minorSymbol: '-'}).name).to.equal('Db-add9');
+    expect(crd('C Eb G D').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, omitMinor: true}).name).to.equal('dbadd9');
+    expect(crd('C E G# D').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false}).name).to.equal('Dbaug(add9)');
+    expect(crd('C E G# D').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, augSymbol: '+'}).name).to.equal('Db+add9');
+    expect(crd('C Eb Gb D').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false}).name).to.equal('Dbdim(add9)');
+    expect(crd('C Eb Gb D').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, dimSymbol: 'o'}).name).to.equal('Dbo(add9)');
+    expect(crd('C Eb Gb D').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, dimSymbol: 'ᵒ'}).name).to.equal('Dbᵒadd9');
+    expect(crd('C E Gb D').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false}).name).to.equal('Db(b5)add9');
+  });
+  
+  it('get chord name - multiple addX is not bracketed after lower-case "b"', () => {
+    expect(crd('C E G D C#').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false}).name).to.equal('Dbadd9add(b2)');
+    expect(crd('C E G D C#').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, omitMajor: false, majorSymbol: 'maj'}).name).to.equal('Dbmaj(add9add(b2))');
+    expect(crd('C E G D C#').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, omitMajor: false, majorSymbol: 'M'}).name).to.equal('DbMadd9add(b2)');
+    expect(crd('C Eb G D C#').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false}).name).to.equal('Dbm(add9add(b2))');
+    expect(crd('C Eb G D C#').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, minorSymbol: 'min'}).name).to.equal('Dbmin(add9add(b2))');
+    expect(crd('C Eb G D C#').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, minorSymbol: '-'}).name).to.equal('Db-add9add(b2)');
+    expect(crd('C Eb G D C#').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, omitMinor: true}).name).to.equal('dbadd9add(b2)');
+    expect(crd('C E G# D C#').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false}).name).to.equal('Dbaug(add9add(b2))');
+    expect(crd('C E G# D C#').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, augSymbol: '+'}).name).to.equal('Db+add9add(b2)');
+    expect(crd('C Eb Gb D C#').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false}).name).to.equal('Dbdim(add9add(b2))');
+    expect(crd('C Eb Gb D C#').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, dimSymbol: 'o'}).name).to.equal('Dbo(add9add(b2))');
+    expect(crd('C Eb Gb D C#').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false, dimSymbol: 'ᵒ'}).name).to.equal('Dbᵒadd9add(b2)');
+    expect(crd('C E Gb D C#').transpose(1).getName('db', {useFlats: true, unicodeAccidentals: false}).name).to.equal('Db(b5)add9add(b2)');
+  });
+  
   it('get chord name - others', () => {
     //not sure about below!
     expect(crd('C Eb E G').getName(c).name).to.equal('Cadd(m3)'); //is this right??
     
-    expect(crd('C E G Bb B').getName(c).name).to.equal('C7add(maj7)'); //this is C13. Maybe I meant C E G Bb B ?? Would that be C7add7?
+    expect(crd('C E G Bb B').getName(c).name).to.equal('C7add(maj7)');
     
     //need more...
   });
@@ -310,7 +402,7 @@ describe('test Chord class', () => {
       "F# A C F":[{o:{}, x:"F♯dim(maj7)"},{o:{useFlats:true}, x:"G♭dim(maj7)"},{o:{majorSymbol:"M"}, x:"F♯dim(M7)"},{o:{omitMajor:false}, x:"F♯dim(maj7)"},{o:{omitMinor:true}, x:"F♯dim(maj7)"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯ᵒmaj7"},{o:{unicodeAccidentals:false}, x:"F#dim(maj7)"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbdim(maj7)"}],
       "F# A# C# E G#":[{o:{}, x:"F♯9"},{o:{useFlats:true}, x:"G♭9"},{o:{majorSymbol:"M"}, x:"F♯9"},{o:{omitMajor:false}, x:"F♯9"},{o:{omitMinor:true}, x:"F♯9"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯9"},{o:{unicodeAccidentals:false}, x:"F#9"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gb9"}],
       "F# A# C# F G#":[{o:{}, x:"F♯maj9"},{o:{useFlats:true}, x:"G♭maj9"},{o:{majorSymbol:"M"}, x:"F♯M9"},{o:{omitMajor:false}, x:"F♯maj9"},{o:{omitMinor:true}, x:"F♯maj9"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯maj9"},{o:{unicodeAccidentals:false}, x:"F#maj9"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbmaj9"}],
-      "F# A# C# G#":[{o:{}, x:"F♯add9"},{o:{useFlats:true}, x:"G♭add9"},{o:{majorSymbol:"M"}, x:"F♯add9"},{o:{omitMajor:false}, x:"F♯add9"},{o:{omitMinor:true}, x:"F♯add9"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯add9"},{o:{unicodeAccidentals:false}, x:"F#add9"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbadd9"}],
+      "F# A# C# G#":[{o:{}, x:"F♯add9"},{o:{useFlats:true}, x:"G♭add9"},{o:{majorSymbol:"M"}, x:"F♯add9"},{o:{omitMajor:false}, x:"F♯maj(add9)"},{o:{omitMinor:true}, x:"F♯add9"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯add9"},{o:{unicodeAccidentals:false}, x:"F#add9"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbadd9"}],
       "F# A C# E G#":[{o:{}, x:"F♯m9"},{o:{useFlats:true}, x:"G♭m9"},{o:{majorSymbol:"M"}, x:"F♯m9"},{o:{omitMajor:false}, x:"F♯m9"},{o:{omitMinor:true}, x:"f♯9"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯-9"},{o:{unicodeAccidentals:false}, x:"F#m9"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbm9"}],
       "F# A C# F G#":[{o:{}, x:"F♯m(maj9)"},{o:{useFlats:true}, x:"G♭m(maj9)"},{o:{majorSymbol:"M"}, x:"F♯m(M9)"},{o:{omitMajor:false}, x:"F♯m(maj9)"},{o:{omitMinor:true}, x:"f♯maj9"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯-maj9"},{o:{unicodeAccidentals:false}, x:"F#m(maj9)"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbm(maj9)"}],
       "F# A C# G#":[{o:{}, x:"F♯m(add9)"},{o:{useFlats:true}, x:"G♭m(add9)"},{o:{majorSymbol:"M"}, x:"F♯m(add9)"},{o:{omitMajor:false}, x:"F♯m(add9)"},{o:{omitMinor:true}, x:"f♯add9"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯-add9"},{o:{unicodeAccidentals:false}, x:"F#m(add9)"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbm(add9)"}],
@@ -324,7 +416,7 @@ describe('test Chord class', () => {
       "F# A# D G#":[{o:{}, x:"F♯aug(add9)"},{o:{useFlats:true}, x:"G♭aug(add9)"},{o:{majorSymbol:"M"}, x:"F♯aug(add9)"},{o:{omitMajor:false}, x:"F♯aug(add9)"},{o:{omitMinor:true}, x:"F♯aug(add9)"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯+add9"},{o:{unicodeAccidentals:false}, x:"F#aug(add9)"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbaug(add9)"}],
       "F# A# C# E G# B":[{o:{}, x:"F♯11"},{o:{useFlats:true}, x:"G♭11"},{o:{majorSymbol:"M"}, x:"F♯11"},{o:{omitMajor:false}, x:"F♯11"},{o:{omitMinor:true}, x:"F♯11"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯11"},{o:{unicodeAccidentals:false}, x:"F#11"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gb11"}],
       "F# A# C# E B":[{o:{}, x:"F♯11"},{o:{useFlats:true}, x:"G♭11"},{o:{majorSymbol:"M"}, x:"F♯11"},{o:{omitMajor:false}, x:"F♯11"},{o:{omitMinor:true}, x:"F♯11"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯11"},{o:{unicodeAccidentals:false}, x:"F#11"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gb11"}],
-      "F# A# C# B":[{o:{}, x:"F♯add11"},{o:{useFlats:true}, x:"G♭add11"},{o:{majorSymbol:"M"}, x:"F♯add11"},{o:{omitMajor:false}, x:"F♯add11"},{o:{omitMinor:true}, x:"F♯add11"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯add11"},{o:{unicodeAccidentals:false}, x:"F#add11"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbadd11"}],
+      "F# A# C# B":[{o:{}, x:"F♯add11"},{o:{useFlats:true}, x:"G♭add11"},{o:{majorSymbol:"M"}, x:"F♯add11"},{o:{omitMajor:false}, x:"F♯maj(add11)"},{o:{omitMinor:true}, x:"F♯add11"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯add11"},{o:{unicodeAccidentals:false}, x:"F#add11"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbadd11"}],
       "F# A# C# F G# B":[{o:{}, x:"F♯maj11"},{o:{useFlats:true}, x:"G♭maj11"},{o:{majorSymbol:"M"}, x:"F♯M11"},{o:{omitMajor:false}, x:"F♯maj11"},{o:{omitMinor:true}, x:"F♯maj11"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯maj11"},{o:{unicodeAccidentals:false}, x:"F#maj11"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbmaj11"}],
       "F# A# C# F B":[{o:{}, x:"F♯maj11"},{o:{useFlats:true}, x:"G♭maj11"},{o:{majorSymbol:"M"}, x:"F♯M11"},{o:{omitMajor:false}, x:"F♯maj11"},{o:{omitMinor:true}, x:"F♯maj11"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯maj11"},{o:{unicodeAccidentals:false}, x:"F#maj11"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbmaj11"}],
       "F# A C# E G# B":[{o:{}, x:"F♯m11"},{o:{useFlats:true}, x:"G♭m11"},{o:{majorSymbol:"M"}, x:"F♯m11"},{o:{omitMajor:false}, x:"F♯m11"},{o:{omitMinor:true}, x:"f♯11"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯-11"},{o:{unicodeAccidentals:false}, x:"F#m11"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbm11"}],
@@ -364,14 +456,14 @@ describe('test Chord class', () => {
       "F# A# D F G# D#":[{o:{}, x:"F♯aug(maj13)"},{o:{useFlats:true}, x:"G♭aug(maj13)"},{o:{majorSymbol:"M"}, x:"F♯aug(M13)"},{o:{omitMajor:false}, x:"F♯aug(maj13)"},{o:{omitMinor:true}, x:"F♯aug(maj13)"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯+maj13"},{o:{unicodeAccidentals:false}, x:"F#aug(maj13)"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbaug(maj13)"}],
       "F# A# D F B D#":[{o:{}, x:"F♯aug(maj13)"},{o:{useFlats:true}, x:"G♭aug(maj13)"},{o:{majorSymbol:"M"}, x:"F♯aug(M13)"},{o:{omitMajor:false}, x:"F♯aug(maj13)"},{o:{omitMinor:true}, x:"F♯aug(maj13)"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯+maj13"},{o:{unicodeAccidentals:false}, x:"F#aug(maj13)"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbaug(maj13)"}],
       "F# A# D F D#":[{o:{}, x:"F♯aug(maj13)"},{o:{useFlats:true}, x:"G♭aug(maj13)"},{o:{majorSymbol:"M"}, x:"F♯aug(M13)"},{o:{omitMajor:false}, x:"F♯aug(maj13)"},{o:{omitMinor:true}, x:"F♯aug(maj13)"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯+maj13"},{o:{unicodeAccidentals:false}, x:"F#aug(maj13)"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbaug(maj13)"}],
-      "F# A# C# D#":[{o:{}, x:"F♯6"},{o:{useFlats:true}, x:"G♭6"},{o:{majorSymbol:"M"}, x:"F♯6"},{o:{omitMajor:false}, x:"F♯6"},{o:{omitMinor:true}, x:"F♯6"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯6"},{o:{unicodeAccidentals:false}, x:"F#6"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gb6"}],
-      "F# A# D#":[{o:{}, x:"F♯6(no5)"},{o:{useFlats:true}, x:"G♭6(no5)"},{o:{majorSymbol:"M"}, x:"F♯6(no5)"},{o:{omitMajor:false}, x:"F♯6(no5)"},{o:{omitMinor:true}, x:"F♯6(no5)"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯6(no5)"},{o:{unicodeAccidentals:false}, x:"F#6(no5)"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gb6(no5)"}],
-      "F# A# C D#":[{o:{}, x:"F♯6(♭5)"},{o:{useFlats:true}, x:"G♭6(♭5)"},{o:{majorSymbol:"M"}, x:"F♯6(♭5)"},{o:{omitMajor:false}, x:"F♯6(♭5)"},{o:{omitMinor:true}, x:"F♯6(♭5)"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯6(♭5)"},{o:{unicodeAccidentals:false}, x:"F#6(b5)"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gb6(b5)"}],
+      "F# A# C# D#":[{o:{}, x:"F♯6"},{o:{useFlats:true}, x:"G♭6"},{o:{majorSymbol:"M"}, x:"F♯6"},{o:{omitMajor:false}, x:"F♯maj6"},{o:{omitMinor:true}, x:"F♯6"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯6"},{o:{unicodeAccidentals:false}, x:"F#6"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gb6"}],
+      "F# A# D#":[{o:{}, x:"F♯6(no5)"},{o:{useFlats:true}, x:"G♭6(no5)"},{o:{majorSymbol:"M"}, x:"F♯6(no5)"},{o:{omitMajor:false}, x:"F♯maj6(no5)"},{o:{omitMinor:true}, x:"F♯6(no5)"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯6(no5)"},{o:{unicodeAccidentals:false}, x:"F#6(no5)"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gb6(no5)"}],
+      "F# A# C D#":[{o:{}, x:"F♯6(♭5)"},{o:{useFlats:true}, x:"G♭6(♭5)"},{o:{majorSymbol:"M"}, x:"F♯6(♭5)"},{o:{omitMajor:false}, x:"F♯maj6(♭5)"},{o:{omitMinor:true}, x:"F♯6(♭5)"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯6(♭5)"},{o:{unicodeAccidentals:false}, x:"F#6(b5)"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gb6(b5)"}],
       "F# A# D D#":[{o:{}, x:"F♯aug6"},{o:{useFlats:true}, x:"G♭aug6"},{o:{majorSymbol:"M"}, x:"F♯aug6"},{o:{omitMajor:false}, x:"F♯aug6"},{o:{omitMinor:true}, x:"F♯aug6"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯+6"},{o:{unicodeAccidentals:false}, x:"F#aug6"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbaug6"}],
       "F# A C# D#":[{o:{}, x:"F♯m6"},{o:{useFlats:true}, x:"G♭m6"},{o:{majorSymbol:"M"}, x:"F♯m6"},{o:{omitMajor:false}, x:"F♯m6"},{o:{omitMinor:true}, x:"f♯6"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯-6"},{o:{unicodeAccidentals:false}, x:"F#m6"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbm6"}],
       "F# A D#":[{o:{}, x:"F♯m6(no5)"},{o:{useFlats:true}, x:"G♭m6(no5)"},{o:{majorSymbol:"M"}, x:"F♯m6(no5)"},{o:{omitMajor:false}, x:"F♯m6(no5)"},{o:{omitMinor:true}, x:"f♯6(no5)"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯-6(no5)"},{o:{unicodeAccidentals:false}, x:"F#m6(no5)"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbm6(no5)"}],
       "F# A D D#":[{o:{}, x:"F♯m6(♯5)"},{o:{useFlats:true}, x:"G♭m6(♯5)"},{o:{majorSymbol:"M"}, x:"F♯m6(♯5)"},{o:{omitMajor:false}, x:"F♯m6(♯5)"},{o:{omitMinor:true}, x:"f♯6(♯5)"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯-6(♯5)"},{o:{unicodeAccidentals:false}, x:"F#m6(#5)"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbm6(#5)"}],
-      "F# A# C# D# G#":[{o:{}, x:"F♯6/9"},{o:{useFlats:true}, x:"G♭6/9"},{o:{majorSymbol:"M"}, x:"F♯6/9"},{o:{omitMajor:false}, x:"F♯6/9"},{o:{omitMinor:true}, x:"F♯6/9"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯6/9"},{o:{unicodeAccidentals:false}, x:"F#6/9"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gb6/9"}],
+      "F# A# C# D# G#":[{o:{}, x:"F♯6/9"},{o:{useFlats:true}, x:"G♭6/9"},{o:{majorSymbol:"M"}, x:"F♯6/9"},{o:{omitMajor:false}, x:"F♯maj6/9"},{o:{omitMinor:true}, x:"F♯6/9"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯6/9"},{o:{unicodeAccidentals:false}, x:"F#6/9"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gb6/9"}],
       "F# A C# D# G#":[{o:{}, x:"F♯m6/9"},{o:{useFlats:true}, x:"G♭m6/9"},{o:{majorSymbol:"M"}, x:"F♯m6/9"},{o:{omitMajor:false}, x:"F♯m6/9"},{o:{omitMinor:true}, x:"f♯6/9"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯-6/9"},{o:{unicodeAccidentals:false}, x:"F#m6/9"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbm6/9"}],
       "F# G# C#":[{o:{}, x:"F♯sus2"},{o:{useFlats:true}, x:"G♭sus2"},{o:{majorSymbol:"M"}, x:"F♯sus2"},{o:{omitMajor:false}, x:"F♯sus2"},{o:{omitMinor:true}, x:"F♯sus2"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯sus2"},{o:{unicodeAccidentals:false}, x:"F#sus2"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbsus2"}],
       "F# B C#":[{o:{}, x:"F♯sus4"},{o:{useFlats:true}, x:"G♭sus4"},{o:{majorSymbol:"M"}, x:"F♯sus4"},{o:{omitMajor:false}, x:"F♯sus4"},{o:{omitMinor:true}, x:"F♯sus4"},{o:{minorSymbol:"-",augSymbol:"+",dimSymbol:"unicode",unicodeHalfDiminished:true}, x:"F♯sus4"},{o:{unicodeAccidentals:false}, x:"F#sus4"},{o:{unicodeAccidentals:false,useFlats:true}, x:"Gbsus4"}],

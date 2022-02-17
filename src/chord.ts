@@ -105,6 +105,17 @@ export default class Chord {
   }
   
   /**
+   * Transposes this chord the given number of half steps.
+   * 
+   * @param n number of half steps
+   * @returns A new Chord instance.
+   */
+  transpose(n: number): Chord {
+    // TODO: bassNote is lost in this process
+    return new Chord(this.notes.map(note => note.transpose(n)));
+  }
+  
+  /**
    * Returns the notes of this chord, separated by a space.
    */
   toString(): string {
@@ -332,7 +343,6 @@ export default class Chord {
       consumed[MAJ_THIRD] = true;
       if(!options.omitMajor)
         quality = options.majorSymbol;
-      let isAug = false;
       
       if(intervals[FIFTH]) {
         score += 10;
@@ -354,7 +364,6 @@ export default class Chord {
           noteDetails.push({interval: `${options.sharpSymbol}5`, note: rootNote.transpose(SHARP_FIFTH)});
           consumed[SHARP_FIFTH] = true;
           quality = options.augSymbol;
-          isAug = true;
         }
         else {
           score -= 10;
@@ -369,6 +378,11 @@ export default class Chord {
         noteDetails.push({interval: '7', note: rootNote.transpose(DOM_SEVENTH)});
         consumed[DOM_SEVENTH] = true;
         intervalName = '7';
+        
+        // even if we have setting to always show major symbol, we don't on a 7 chord because that would be
+        // confused with a maj7 chord
+        if(!options.omitMajor && quality === options.majorSymbol)
+          quality = '';
       }
       else if(intervals[MAJ_SEVENTH]) {
         score -= 5;
@@ -376,6 +390,10 @@ export default class Chord {
         noteDetails.push({interval: `${options.majorSymbol}7`, note: rootNote.transpose(MAJ_SEVENTH)});
         consumed[MAJ_SEVENTH] = true;
         intervalName = `${options.majorSymbol}7`;
+        
+        // in a maj7 chord, the major symbol is carried on the interval name property instead of quality.
+        if(!options.omitMajor && quality === options.majorSymbol)
+          quality = '';
       }
       
       if(intervals[NINTH]) {
@@ -464,9 +482,6 @@ export default class Chord {
         consumed[SIXTH] = true;
         intervalName = '6';
       }
-      
-      if(!options.omitMajor && quality === options.majorSymbol && (intervalName !== '' || added !== ''))
-        quality = '';
     }
     else if(intervals[MIN_THIRD]) {
       score += 28;
