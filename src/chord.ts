@@ -111,8 +111,17 @@ export default class Chord {
    * @returns A new Chord instance.
    */
   transpose(n: number): Chord {
-    // TODO: bassNote is lost in this process
-    return new Chord(this.notes.map(note => note.transpose(n)));
+    // kind of hacky--to preserve bass note, if we have a bass note, generate
+    // an array of pitches with the bass note set to octave 2, other notes
+    // set to octave 4. If we don't have a bass note, just use an array
+    // of transposed notes.
+    const newNotes:Array<Note|Pitch> = this.notes.map(note => {
+      if(this.bassNote)
+        return new Pitch(note.transpose(n), note.equals(this.bassNote) ? 2 : 4);
+      return note.transpose(n);
+    })
+    
+    return new Chord(newNotes);
   }
   
   /**
@@ -164,7 +173,7 @@ export default class Chord {
   }
   
   /** 
-   * THIS IS WHERE THE MAGIC HAPPENS.
+   * Determines the best name for this chord. With verbose output, it shows the reasons it selected the name it did.
    * 
    * Returns object like:
    * ```
@@ -174,7 +183,7 @@ export default class Chord {
    *       {interval: 'R', note: C},
    *       {interval: '3', note: E},
    *       {interval: '5', note: G}
-   *     ]
+   *     ],
    *     verbose: [ 'assuming root is C', 'found a maj3 - this is a major chord', 'found 5th' ]
    *   }
    * ```
@@ -188,7 +197,7 @@ export default class Chord {
    *       {interval: 'm3', note: Eb},
    *       {interval: '5', note: G}
    *       {interval: 'm7', note: Bb}
-   *     ]
+   *     ],
    *     verbose: [ 'assuming root is C', 'found a min3 - this is a minor chord', 'found 5th', 'found minor 7th' ]
    *   }
    * ```

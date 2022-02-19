@@ -4,6 +4,7 @@ import {Note, Pitch, Chord, ChordNameOptions} from "../src";
 //shortcuts to make tests less tedious to write...
 const c = new Note('C');
 const crd = (noteList:string) => new Chord(noteList);
+const notes = (noteList:string) => noteList.split(/ /).map(s => new Note(s));
 
 describe('test Chord class', () => {
   it('chord constructor - string', () => {
@@ -52,6 +53,27 @@ describe('test Chord class', () => {
     expect(() => new Chord([1])).to.throw;
     // @ts-expect-error
     expect(() => new Chord([new Date()])).to.throw;
+  });
+  
+  it('transpose chord', () => {
+    expect(crd('C E G').transpose(0).getNotes()).to.deep.equal(notes('C E G'));
+    expect(crd('C E G').transpose(1).getNotes()).to.deep.equal(notes('C# E# G#'));
+    expect(crd('C E G').transpose(-1).getNotes()).to.deep.equal(notes('Cb Eb Gb'));
+    expect(crd('C E G').transpose(6).getNotes()).to.deep.equal(notes('Gb Bb Db'));
+    expect(crd('C E G').transpose(-6).getNotes()).to.deep.equal(notes('Gb Bb Db'));
+    expect(crd('C E G').transpose(12).getNotes()).to.deep.equal(notes('C E G'));
+    expect(crd('C E G').transpose(23).getNotes()).to.deep.equal(notes('Cb Eb Gb'));
+    expect(crd('C E G').transpose(-23).getNotes()).to.deep.equal(notes('C# E# G#'));
+    expect(crd('C E G').transpose(25).getNotes()).to.deep.equal(notes('C# E# G#'));
+    expect(crd('C E G').transpose(-25).getNotes()).to.deep.equal(notes('Cb Eb Gb'));
+  });
+  
+  it('transpose chord - preserve bass note', () => {
+    const chord = new Chord([new Pitch('C5'), new Pitch('EB6'), new Pitch('G4'), new Pitch('b3'), new Pitch('c2')]);
+    expect(chord.transpose(2).getBassNote()?.getName()).to.equal('D');
+    expect(chord.transpose(-3).getBassNote()?.getName()).to.equal('A');
+    expect(chord.transpose(13).getBassNote()?.getName()).to.equal('C♯');
+    expect(chord.transpose(-13).getBassNote()?.getName()).to.equal('B');
   });
   
   it('get chord name - verbose option', () => {
