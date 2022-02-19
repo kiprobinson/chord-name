@@ -5,6 +5,8 @@ build test package: pnpm pack
 => generates .tgz file that matches what would be published on npm
 
 bump version: pnpm version patch
+=> creates a commit and a tag
+=> be sure to git push those
 
 publish to npm: pnpm publish
-
+=> You'll need OTP code from app
