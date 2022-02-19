@@ -10,14 +10,14 @@ Beyond well-defined chords like majors/minors/sevenths, there can be surprising 
 
 I need to make a special mention of two-note chords. In the traditional definition of "chord", at least three notes are required to define a chord. But that completely ignores the ubiquitous power chord! Rather than throw an error, my algorithm will return the following names for two-note chords:
 
-| Intervals                | Name                | Example          |
-|--------------------------|---------------------|------------------|
-| Root + minor third       | \<root\>m(no5)        | C + E♭ = Cm(no5) |
-| Root + major third       | &lt;root&gt;(no5)         | C + E = C(no5)   |
-| Root + flat fifth        | <root>dim5          | C + G♭ = Cdim5   |
-| Root + fifth             | <root>5             | C + G = C5       |
-| Root + sharp fifth       | <root>aug5          | C + G♯ = Caug5   |
-| _All other combinations_ | <root>~<other-note> | C + A = C~A      |
+| Intervals                | Name                     | Example          |
+|--------------------------|--------------------------|------------------|
+| Root + minor third       | \<root\>m(no5)           | C + E♭ = Cm(no5) |
+| Root + major third       | \<root\>(no5)            | C + E = C(no5)   |
+| Root + flat fifth        | \<root\>dim5             | C + G♭ = Cdim5   |
+| Root + fifth             | \<root\>5                | C + G = C5       |
+| Root + sharp fifth       | \<root\>aug5             | C + G♯ = Caug5   |
+| _All other combinations_ | \<root\>\~\<other-note\> | C + A = C\~A     |
 
 I'm really not happy with that "All other combinations" row, but it's the best I could come up with. I'm [certainly open to feedback](https://github.com/kiprobinson/chord-name/issues) if you have a better idea!
 
