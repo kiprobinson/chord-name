@@ -111,16 +111,24 @@ describe('test Note class', () => {
     expect(new Note('a♯').getName({useFlats:true})).to.equal('B♭');
   });
   
+  it('Create note with non-standard name', () => {
+    expect(new Note('Cb').getName()).to.equal('B');
+    expect(new Note('B#').getName()).to.equal('C');
+    expect(new Note('Fb').getName()).to.equal('E');
+    expect(new Note('E#').getName()).to.equal('F');
+    
+    expect(new Note('Bbb').getName()).to.equal('A');
+    expect(new Note('A##').getName()).to.equal('B');
+    
+    // why not... :)
+    expect(new Note('bB♭b#♯##B♯').getName()).to.equal('C');
+    expect(new Note('bbbbbbbbbbbbbbb').getName()).to.equal('A')
+  })
+  
   it('negative tests for creating notes', () => {
     expect(()=>new Note('')).to.throw();
     expect(()=>new Note('H')).to.throw();
     expect(()=>new Note(0.5)).to.throw();
-    
-    //these are technically valid but I haven't implemented... maybe someday...
-    expect(()=>new Note('Cb')).to.throw();
-    expect(()=>new Note('Bbb')).to.throw();
-    expect(()=>new Note('B#')).to.throw();
-    expect(()=>new Note('A##')).to.throw();
     
     //these are things that typescript won't allow, but a JS caller may do...
     // @ts-expect-error

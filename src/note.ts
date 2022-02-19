@@ -14,31 +14,29 @@ export default class Note {
    * @param note Either a string representing a note, or a finite integer representing
    *             how many half-steps above or below C the note is. For the string
    *             representation, the value is not case-sensitive. You can specify flats
-   *             with "b" or "\u266D". String also must be a "normal" name, i.e. you
-   *             can't have more than one flat or sharp symbol, you cannot have a natural
-   *             symbol, and you cannot have Cb, B#, Fb, or E#. (maybe some day...)
+   *             with `b` or `\u266D`, and sharps with `#` or `\u266F`. String format
+   *             can also include multiple flat/sharp symbols, which will be normalized.
+   *             names like "Cb" or "E#" are also accepted.
    */
   constructor(note:string|number|Note) {
     // a copy of the input note, used for error messages
     const _note = note;
     
-    if(typeof note === 'string' && 1 <= note.length && note.length <= 2) {
-      if(note.length === 1)
-        note = note.toUpperCase();
-      else if(note.length === 2)
-        note = note.charAt(0).toUpperCase() + note.charAt(1).toLowerCase();
-      
-      //convert unicode sharp/flat back to ascii
-      note = note.replace(/\u266F/, '#').replace(/\u266D/, 'b');
-      
-      let idx = NAMES_SHARP.indexOf(note);
-      if(idx < 0)
-        idx = NAMES_FLAT.indexOf(note);
-      
-      if(idx >= 0) {
-        this.id = idx;
-        return;
+    if(typeof note === 'string' && /^[a-g][#b\u266D\u266F]*$/i.test(note)) {
+      const baseNote = note[0].toUpperCase();
+      const accidentals:string[] = note.substring(1).toLowerCase().split('');
+      let accidentalAdjustment = 0;
+      for(const accidental of accidentals) {
+        if(accidental === 'b' || accidental === '\u266D')
+          accidentalAdjustment--;
+        else
+          accidentalAdjustment++;
       }
+      
+      this.id = (NAMES_SHARP.indexOf(baseNote) + accidentalAdjustment) % 12;
+      if(this.id < 0)
+        this.id += 12;
+      return;
     }
     else if(typeof note === 'number' && Number.isInteger(note)) {
       this.id = note % 12;
