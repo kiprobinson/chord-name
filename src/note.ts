@@ -2,6 +2,8 @@ import { ChordNameOptions, sanitizeChordNameOptions, SanitizedChordNameOptions }
 
 const NAMES_SHARP = [ 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B' ];
 const NAMES_FLAT  = [ 'C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B' ];
+const NAMES_SHARP_UNICODE = NAMES_SHARP.map(s => s.replace('#', '\u266F'));
+const NAMES_FLAT_UNICODE  =  NAMES_FLAT.map(s => s.replace('b', '\u266D'));
 
 /**
  * A Note represents a musical note, with no octave specified. For example, "C", "Eb", F#".
@@ -59,11 +61,10 @@ export default class Note {
   getName(_options?:ChordNameOptions): string {
     const options: SanitizedChordNameOptions = sanitizeChordNameOptions(_options);
     
-    let name = (options.useFlats ? NAMES_FLAT[this.id] : NAMES_SHARP[this.id]);
-    if(name.length > 1 && options.unicodeAccidentals)
-      name = name.charAt(0) + (options.useFlats ? options.flatSymbol : options.sharpSymbol);
+    if(options.useFlats)
+      return options.unicodeAccidentals ? NAMES_FLAT_UNICODE[this.id] : NAMES_FLAT[this.id];
     
-    return name;
+    return options.unicodeAccidentals ? NAMES_SHARP_UNICODE[this.id] : NAMES_SHARP[this.id];
   }
   
   /**
