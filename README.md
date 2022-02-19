@@ -20,7 +20,7 @@ Typescript type definitions are provided. No `@types` import is required.
 ## Overview
 
 ```
-import {Chord, Note} from 'chord-name';
+const {Chord} = require('chord-name');
 
 const chord = new Chord('A C E G');
 
@@ -30,22 +30,22 @@ console.log(chord.getName('A'));
 OUTPUT:
 {
   "name": "Am7",
-  "notes": [
+  "intervals": [
     {
       "interval": "R",
-      "note": new Note("A")
+      "note": "A"
     },
     {
       "interval": "m3",
-      "note": new Note("C")
+      "note": "C"
     },
     {
       "interval": "5",
-      "note": new Note("E")
+      "note": "E"
     },
     {
       "interval": "7",
-      "note": new Note("G")
+      "note": "G"
     }
   ],
   "score": 33
@@ -59,88 +59,88 @@ OUTPUT:
 [
   {
     "name": "Am7",
-    "notes": [
+    "intervals": [
       {
         "interval": "R",
-        "note": new Note("A")
+        "note": "A"
       },
       {
         "interval": "m3",
-        "note": new Note("C")
+        "note": "C"
       },
       {
         "interval": "5",
-        "note": new Note("E")
+        "note": "E"
       },
       {
         "interval": "7",
-        "note": new Note("G")
+        "note": "G"
       }
     ],
     "score": 33
   },
   {
     "name": "C6",
-    "notes": [
+    "intervals": [
       {
         "interval": "R",
-        "note": new Note("C")
+        "note": "C"
       },
       {
         "interval": "3",
-        "note": new Note("E")
+        "note": "E"
       },
       {
         "interval": "5",
-        "note": new Note("G")
+        "note": "G"
       },
       {
         "interval": "6",
-        "note": new Note("A")
+        "note": "A"
       }
     ],
     "score": 31
   },
   {
-    "name": "Em(#5)add11",
-    "notes": [
+    "name": "Em(♯5)add11",
+    "intervals": [
       {
         "interval": "R",
-        "note": new Note("E")
+        "note": "E"
       },
       {
         "interval": "m3",
-        "note": new Note("G")
+        "note": "G"
       },
       {
-        "interval": "#5",
-        "note": new Note("C")
+        "interval": "♯5",
+        "note": "C"
       },
       {
         "interval": "11",
-        "note": new Note("A")
+        "note": "A"
       }
     ],
     "score": 18
   },
   {
     "name": "G6/9sus4(no5)",
-    "notes": [
+    "intervals": [
       {
         "interval": "R",
-        "note": new Note("G")
+        "note": "G"
       },
       {
         "interval": "6",
-        "note": new Note("E")
+        "note": "E"
       },
       {
         "interval": "9",
-        "note": new Note("A")
+        "note": "A"
       },
       {
         "interval": "4",
-        "note": new Note("C")
+        "note": "C"
       }
     ],
     "score": 2

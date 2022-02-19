@@ -91,7 +91,7 @@ describe('test Chord class', () => {
       {interval: '3', note: new Note('F')},
       {interval: '5', note: new Note('G#')},
     ];
-    expect(crd('C# F G#').getName('C#', {returnPojo:false}).notes).to.deep.equal(expected);
+    expect(crd('C# F G#').getName('C#', {returnPojo:false}).intervals).to.deep.equal(expected);
     
     // with returnPojo option, note value is a plain string instead of Note instance
     expected = [
@@ -99,7 +99,7 @@ describe('test Chord class', () => {
       {interval: '3', note: 'F'},
       {interval: '5', note: 'G♯'},
     ];
-    expect(crd('C# F G#').getName('C#').notes).to.deep.equal(expected);
+    expect(crd('C# F G#').getName('C#').intervals).to.deep.equal(expected);
     
     // verify useFlats and unicodeAccidental options apply to stringifying of note
     expected = [
@@ -107,21 +107,21 @@ describe('test Chord class', () => {
       {interval: '3', note: 'F'},
       {interval: '5', note: 'Ab'},
     ];
-    expect(crd('C# F G#').getName('C#', {useFlats: true, unicodeAccidentals: false}).notes).to.deep.equal(expected);
+    expect(crd('C# F G#').getName('C#', {useFlats: true, unicodeAccidentals: false}).intervals).to.deep.equal(expected);
   });
   
   it('get chord name - unicodeAccidentals option applies to interval names', () => {
-    expect(crd('C# F A').getName('C#').notes.map(v => v.interval)).to.deep.equal(['R', '3', '♯5']);
-    expect(crd('C# F A').getName('C#', {unicodeAccidentals: false}).notes.map(v => v.interval)).to.deep.equal(['R', '3', '#5']);
+    expect(crd('C# F A').getName('C#').intervals.map(v => v.interval)).to.deep.equal(['R', '3', '♯5']);
+    expect(crd('C# F A').getName('C#', {unicodeAccidentals: false}).intervals.map(v => v.interval)).to.deep.equal(['R', '3', '#5']);
     
-    expect(crd('C# E G A#').getName('C#').notes.map(v => v.interval)).to.deep.equal(['R', 'm3', '♭5', '♭♭7']);
-    expect(crd('C# E G A#').getName('C#', {unicodeAccidentals: false}).notes.map(v => v.interval)).to.deep.equal(['R', 'm3', 'b5', 'bb7']);
+    expect(crd('C# E G A#').getName('C#').intervals.map(v => v.interval)).to.deep.equal(['R', 'm3', '♭5', '♭♭7']);
+    expect(crd('C# E G A#').getName('C#', {unicodeAccidentals: false}).intervals.map(v => v.interval)).to.deep.equal(['R', 'm3', 'b5', 'bb7']);
     
-    expect(crd('C# D').getName('C#').notes.map(v => v.interval)).to.deep.equal(['R', '♭2']);
-    expect(crd('C# D').getName('C#', {unicodeAccidentals: false}).notes.map(v => v.interval)).to.deep.equal(['R', 'b2']);
+    expect(crd('C# D').getName('C#').intervals.map(v => v.interval)).to.deep.equal(['R', '♭2']);
+    expect(crd('C# D').getName('C#', {unicodeAccidentals: false}).intervals.map(v => v.interval)).to.deep.equal(['R', 'b2']);
     
-    expect(crd('C# F G# B E').getName('C#').notes.map(v => v.interval)).to.deep.equal(['R', '3', '5', '7', '♯9']);
-    expect(crd('C# F G# B E').getName('C#', {unicodeAccidentals: false}).notes.map(v => v.interval)).to.deep.equal(['R', '3', '5', '7', '#9']);
+    expect(crd('C# F G# B E').getName('C#').intervals.map(v => v.interval)).to.deep.equal(['R', '3', '5', '7', '♯9']);
+    expect(crd('C# F G# B E').getName('C#', {unicodeAccidentals: false}).intervals.map(v => v.interval)).to.deep.equal(['R', '3', '5', '7', '#9']);
   });
   
   it('get chord name - single note "chord"', () => {
