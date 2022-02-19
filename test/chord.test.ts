@@ -91,7 +91,7 @@ describe('test Chord class', () => {
       {interval: '3', note: new Note('F')},
       {interval: '5', note: new Note('G#')},
     ];
-    expect(crd('C# F G#').getName('C#').notes).to.deep.equal(expected);
+    expect(crd('C# F G#').getName('C#', {returnPojo:false}).notes).to.deep.equal(expected);
     
     // with returnPojo option, note value is a plain string instead of Note instance
     expected = [
@@ -99,7 +99,7 @@ describe('test Chord class', () => {
       {interval: '3', note: 'F'},
       {interval: '5', note: 'G♯'},
     ];
-    expect(crd('C# F G#').getName('C#', {returnPojo:true}).notes).to.deep.equal(expected);
+    expect(crd('C# F G#').getName('C#').notes).to.deep.equal(expected);
     
     // verify useFlats and unicodeAccidental options apply to stringifying of note
     expected = [
@@ -107,7 +107,7 @@ describe('test Chord class', () => {
       {interval: '3', note: 'F'},
       {interval: '5', note: 'Ab'},
     ];
-    expect(crd('C# F G#').getName('C#', {returnPojo:true, useFlats: true, unicodeAccidentals: false}).notes).to.deep.equal(expected);
+    expect(crd('C# F G#').getName('C#', {useFlats: true, unicodeAccidentals: false}).notes).to.deep.equal(expected);
   });
   
   it('get chord name - unicodeAccidentals option applies to interval names', () => {

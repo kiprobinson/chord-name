@@ -17,7 +17,7 @@ const SANITIZED_DEFAULTS = {
   halfDimSymbol: '',
   useHtml: false,
   verbose: false,
-  returnPojo: false,
+  returnPojo: true,
 }
 
 describe('test chord name options class', () => {
@@ -110,9 +110,9 @@ describe('test chord name options class', () => {
   });
   
   it('test sanitizeChordNameOptions - returnPojo', () => {
-    expect(sanitizeChordNameOptions({returnPojo: false})).to.deep.equal({...SANITIZED_DEFAULTS});
-    expect(sanitizeChordNameOptions({returnPojo: true})).to.deep.equal({...SANITIZED_DEFAULTS, returnPojo: true});
+    expect(sanitizeChordNameOptions({returnPojo: false})).to.deep.equal({...SANITIZED_DEFAULTS, returnPojo: false});
+    expect(sanitizeChordNameOptions({returnPojo: true})).to.deep.equal({...SANITIZED_DEFAULTS});
     //@ts-expect-error
-    expect(sanitizeChordNameOptions({returnPojo: 'true'})).to.deep.equal({...SANITIZED_DEFAULTS});
+    expect(sanitizeChordNameOptions({returnPojo: 'false'})).to.deep.equal({...SANITIZED_DEFAULTS});
   });
 });
