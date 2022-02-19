@@ -4,3 +4,4 @@ test
 pnpm-lock.yaml
 tsconfig.json
 dist/test
+deploy-notes.txt

@@ -1,0 +1,10 @@
+Notes to self for deployment:
+
+
+build test package: pnpm pack
+=> generates .tgz file that matches what would be published on npm
+
+bump version: pnpm version patch
+
+publish to npm: pnpm publish
+
