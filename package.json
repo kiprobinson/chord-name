@@ -31,6 +31,7 @@
   ],
   "author": "Kip Robinson",
   "license": "GPL-3.0",
+  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/kiprobinson/chord-name/issues"
   },
