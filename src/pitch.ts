@@ -1,5 +1,5 @@
-import { ChordNameOptions } from "./chord-name-options";
-import Note from "./note";
+import { ChordNameOptions } from "./chord-name-options.js";
+import Note from "./note.js";
 
 /**
  * A Pitch is a combination of a Note and an octave, i.e. "C2", "Eb4", "F#0".

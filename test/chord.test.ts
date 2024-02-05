@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import {Note, Pitch, Chord, ChordNameOptions} from "../src";
+import {Note, Pitch, Chord, ChordNameOptions} from "../src/index.js";
 
 //shortcuts to make tests less tedious to write...
 const c = new Note('C');

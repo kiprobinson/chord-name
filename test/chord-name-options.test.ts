@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { sanitizeChordNameOptions } from "../src/chord-name-options";
+import { sanitizeChordNameOptions } from "../src/chord-name-options.js";
 
 //shortcuts to make tests less tedious to write...
 const SANITIZED_DEFAULTS = {

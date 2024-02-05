@@ -1,6 +1,5 @@
 import { expect } from "chai";
-import {Note} from "../src";
-import {Pitch} from "../src";
+import {Note, Pitch} from "../src/index.js";
 
 
 describe('test Pitch class', () => {

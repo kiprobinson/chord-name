@@ -1,6 +1,6 @@
-import { ChordNameOptions, sanitizeChordNameOptions, SanitizedChordNameOptions } from "./chord-name-options";
-import Note from "./note";
-import Pitch from "./pitch";
+import { ChordNameOptions, sanitizeChordNameOptions, SanitizedChordNameOptions } from "./chord-name-options.js";
+import Note from "./note.js";
+import Pitch from "./pitch.js";
 
 export type IntervalName = 'R' | 'b2' | '\u266D2' | '2' | 'm3' | '3' | '4' | 'b5' | '\u266D5' | '5' | '#5' | '\u266F5' | '6' | 'bb7' | '\u266D\u266D7' | 'dom7' | '7' | 'maj7' | 'M7' | '9' | '#9' | '\u266F9' | '11' | '13';
 
