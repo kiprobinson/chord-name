@@ -1,8 +1,8 @@
 # Change Log
  
-## [2.0.0](https://github.com/kiprobinson/chord-name/releases/tag/v2.0.0) - 2020-02-05
+## [2.0.0](https://github.com/kiprobinson/chord-name/releases/tag/v2.0.0) - 2024-02-05
  
-- **Breaking Change**: Project is now ESM
+- ⚠️ **Breaking Change**: Project is now ESM
 - Bump all dependencies to latest version
 
 All changes: [1.0.2...2.0.0](https://github.com/kiprobinson/chord-name/compare/v1.0.2...v2.0.0)
