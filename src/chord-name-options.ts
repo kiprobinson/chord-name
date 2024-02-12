@@ -75,13 +75,6 @@ export type ChordNameOptions = {
    * Default: `false`
    */
   verbose?: boolean;
-  
-  /**
-   * Whether to return a POJO (plain old javascript object). Practically, this means that the
-   * interval object will have strings instead of Note instances.
-   * Default: `true`
-   */
-  returnPojo?: boolean;
 }
 
 /**
@@ -102,7 +95,6 @@ export type SanitizedChordNameOptions = {
   halfDimSymbol: '\u00F8'|'';
   useHtml: boolean;
   verbose: boolean;
-  returnPojo: boolean;
 }
 
 /**
@@ -127,7 +119,6 @@ export const sanitizeChordNameOptions = (options?: ChordNameOptions): SanitizedC
   const halfDimSymbol = unicodeHalfDiminished ? '\u00F8' : '';
   const useHtml = options.useHtml === true;
   const verbose = options.verbose === true;
-  const returnPojo = options.returnPojo !== false;
   
   return {
     useFlats,
@@ -144,6 +135,5 @@ export const sanitizeChordNameOptions = (options?: ChordNameOptions): SanitizedC
     halfDimSymbol,
     useHtml,
     verbose,
-    returnPojo,
   };
 }
