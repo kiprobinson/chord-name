@@ -1,5 +1,12 @@
 # Change Log
  
+## [3.0.0](https://github.com/kiprobinson/chord-name/releases/tag/v3.0.0) - 2024-02-11
+ 
+- ⚠️ **Breaking Change**: Removed `returnPojo` option from `ChordNameOptions`
+- Bump all dependencies to latest version
+
+All changes: [2.0.0...3.0.0](https://github.com/kiprobinson/chord-name/compare/v2.0.0...v3.0.0)
+
 ## [2.0.0](https://github.com/kiprobinson/chord-name/releases/tag/v2.0.0) - 2024-02-05
  
 - ⚠️ **Breaking Change**: Project is now ESM
