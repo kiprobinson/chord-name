@@ -111,6 +111,13 @@ describe('test Note class', () => {
     expect(new Note('a♯').getName({useFlats:true})).to.equal('B♭');
   });
   
+  it('get note names with useHtml option', () => {
+    expect(new Note("a#").getName({useHtml: true})).to.equal('A<sup>♯</sup>');
+    expect(new Note("a#").getName({useHtml: true, unicodeAccidentals: false})).to.equal('A<sup>#</sup>');
+    expect(new Note("a#").getName({useHtml: true, useFlats: true})).to.equal('B<sup>♭</sup>');
+    expect(new Note("a#").getName({useHtml: true, useFlats: true, unicodeAccidentals: false})).to.equal('B<sup>b</sup>');
+  });
+  
   it('Create note with non-standard name', () => {
     expect(new Note('Cb').getName()).to.equal('B');
     expect(new Note('B#').getName()).to.equal('C');

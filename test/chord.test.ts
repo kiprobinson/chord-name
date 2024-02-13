@@ -372,6 +372,35 @@ describe('test Chord class', () => {
     //need more...
   });
   
+  it('6/9 chords with useHtml, unicodeAccidentals, and useFlats options', () => {
+    const root = new Note('F#');
+    
+    expect(crd("F# A# C# D# G#").getName(root, {useHtml: true}).name).to.equal('F<sup>♯</sup><span class="supsub"><span>6</span><span>9</span></span>');
+    expect(crd("F# A  C# D# G#").getName(root, {useHtml: true}).name).to.equal('F<sup>♯</sup>m<span class="supsub"><span>6</span><span>9</span></span>');
+    expect(crd("F#    C# D# G#").getName(root, {useHtml: true}).name).to.equal('F<sup>♯</sup><span class="supsub"><span>6</span><span>9</span></span>sus');
+    
+    expect(crd("F# A# C# D# G#").getName(root, {useHtml: true, unicodeAccidentals: false}).name).to.equal('F<sup>#</sup><span class="supsub"><span>6</span><span>9</span></span>');
+    expect(crd("F# A  C# D# G#").getName(root, {useHtml: true, unicodeAccidentals: false}).name).to.equal('F<sup>#</sup>m<span class="supsub"><span>6</span><span>9</span></span>');
+    expect(crd("F#    C# D# G#").getName(root, {useHtml: true, unicodeAccidentals: false}).name).to.equal('F<sup>#</sup><span class="supsub"><span>6</span><span>9</span></span>sus');
+    
+    expect(crd("F# A# C# D# G#").getName(root, {useHtml: true, useFlats: true}).name).to.equal('G<sup>♭</sup><span class="supsub"><span>6</span><span>9</span></span>');
+    expect(crd("F# A  C# D# G#").getName(root, {useHtml: true, useFlats: true}).name).to.equal('G<sup>♭</sup>m<span class="supsub"><span>6</span><span>9</span></span>');
+    expect(crd("F#    C# D# G#").getName(root, {useHtml: true, useFlats: true}).name).to.equal('G<sup>♭</sup><span class="supsub"><span>6</span><span>9</span></span>sus');
+    
+    expect(crd("F# A# C# D# G#").getName(root, {useHtml: true, useFlats: true, unicodeAccidentals: false}).name).to.equal('G<sup>b</sup><span class="supsub"><span>6</span><span>9</span></span>');
+    expect(crd("F# A  C# D# G#").getName(root, {useHtml: true, useFlats: true, unicodeAccidentals: false}).name).to.equal('G<sup>b</sup>m<span class="supsub"><span>6</span><span>9</span></span>');
+    expect(crd("F#    C# D# G#").getName(root, {useHtml: true, useFlats: true, unicodeAccidentals: false}).name).to.equal('G<sup>b</sup><span class="supsub"><span>6</span><span>9</span></span>sus');
+  });
+  
+  it('2/4 chords with useHtml, unicodeAccidentals, and useFlats options', () => {
+    const root = new Note('F#');
+    
+    expect(crd("F# G# B C#").getName(root, {useHtml: true}).name).to.equal                                           ('F<sup>♯</sup>sus<span class="supsub"><span>2</span><span>4</span></span>');
+    expect(crd("F# G# B C#").getName(root, {useHtml: true, unicodeAccidentals: false}).name).to.equal                ('F<sup>#</sup>sus<span class="supsub"><span>2</span><span>4</span></span>');
+    expect(crd("F# G# B C#").getName(root, {useHtml: true, useFlats: true}).name).to.equal                           ('G<sup>♭</sup>sus<span class="supsub"><span>2</span><span>4</span></span>');
+    expect(crd("F# G# B C#").getName(root, {useHtml: true, useFlats: true, unicodeAccidentals: false}).name).to.equal('G<sup>b</sup>sus<span class="supsub"><span>2</span><span>4</span></span>');
+  });
+  
   it('chord name options - massive test', () => {
     //these tests all use F# as the root note, because it is the only major chord where all notes have accidentals,
     //making the test for different symbols easier

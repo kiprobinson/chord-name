@@ -61,10 +61,18 @@ export default class Note {
   getName(_options?:ChordNameOptions): string {
     const options: SanitizedChordNameOptions = sanitizeChordNameOptions(_options);
     
-    if(options.useFlats)
-      return options.unicodeAccidentals ? NAMES_FLAT_UNICODE[this.id] : NAMES_FLAT[this.id];
+    let name: string;
     
-    return options.unicodeAccidentals ? NAMES_SHARP_UNICODE[this.id] : NAMES_SHARP[this.id];
+    if(options.useFlats)
+      name = options.unicodeAccidentals ? NAMES_FLAT_UNICODE[this.id] : NAMES_FLAT[this.id];
+    else
+      name = options.unicodeAccidentals ? NAMES_SHARP_UNICODE[this.id] : NAMES_SHARP[this.id];
+    
+    if(!options.useHtml || name.length === 1)
+      return name;
+    
+    const [base, accidental] = name;
+    return `${base}<sup>${accidental}</sup>`;
   }
   
   /**

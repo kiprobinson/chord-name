@@ -65,7 +65,12 @@ export type ChordNameOptions = {
   unicodeHalfDiminished?: boolean;
   
   /**
-   * If true, some chord names will have HTML in the output. This only applies to 6/9 or 2/4 chords.
+   * If true, some chord names will have HTML in the output.
+   * This applies to:
+   * - Accidentals wrapped in `<sup>` tags
+   * - 6/9 chords returned as `<span class="supsub"><span>6</span><span>9</span></span>`
+   * - 2/4 chords returned as `<span class="supsub"><span>2</span><span>4</span></span>`
+   * 
    * Default: `false`
    */
   useHtml?: boolean;

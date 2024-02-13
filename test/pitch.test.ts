@@ -41,6 +41,13 @@ describe('test Pitch class', () => {
     expect(new Pitch(new Note('Gb'), 5).getName({useFlats:true})).to.equal('G♭5');
   });
   
+  it('get pitch names with useHtml option', () => {
+    expect(new Pitch("a#4").getName({useHtml: true})).to.equal('A<sup>♯</sup>4');
+    expect(new Pitch("a#4").getName({useHtml: true, unicodeAccidentals: false})).to.equal('A<sup>#</sup>4');
+    expect(new Pitch("a#4").getName({useHtml: true, useFlats: true})).to.equal('B<sup>♭</sup>4');
+    expect(new Pitch("a#4").getName({useHtml: true, useFlats: true, unicodeAccidentals: false})).to.equal('B<sup>b</sup>4');
+  });
+  
   it('transpose pitch', () => {
     expect(new Pitch(new Note('C'), 4).transpose(3).getName()).to.equal('D♯4');
     expect(new Pitch(new Note('Bb'), 4).transpose(6).getName()).to.equal('E5');
